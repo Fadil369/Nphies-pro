@@ -1,13 +1,11 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import { PrismaClient } from '@prisma/client';
 import { authRouter } from './routes/auth';
 import { tenantsRouter } from './routes/tenants';
 import { healthRouter } from './routes/health';
 
 const app = express();
-const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
@@ -35,6 +33,5 @@ app.listen(PORT, () => {
 // Graceful shutdown
 process.on('SIGTERM', async () => {
   console.log('SIGTERM received, shutting down gracefully');
-  await prisma.$disconnect();
   process.exit(0);
 });

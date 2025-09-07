@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏥 BrainSAIT Dashboard - Digital Insurance Platform</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-size: 1.5rem; font-weight: bold; }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .stat-value { font-size: 2rem; font-weight: bold; color: #667eea; }
+        .stat-label { color: #666; margin-top: 0.5rem; }
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .section h2 { margin-bottom: 1rem; color: #333; }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .table th, .table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .table th { background: #f8f9fa; font-weight: 600; }
+        .status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .status.active { background: #d4edda; color: #155724; }
+        .status.approved { background: #d1ecf1; color: #0c5460; }
+        .status.pending { background: #fff3cd; color: #856404; }
+        .loading { text-align: center; padding: 2rem; color: #666; }
+        .error { color: #dc3545; text-align: center; padding: 1rem; }
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        .btn:hover { background: #5a6fd8; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🏥 BrainSAIT Digital Insurance Platform</div>
+        <div>Dashboard v1.0.0</div>
+    </div>
+
+    <div class="container">
+        <!-- Stats Section -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalClaims">-</div>
+                <div class="stat-label">Total Claims</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="activePatients">-</div>
+                <div class="stat-label">Active Patients</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="autoApproved">-</div>
+                <div class="stat-label">Auto-Approved</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avgProcessingTime">-</div>
+                <div class="stat-label">Avg Processing Time</div>
+            </div>
+        </div>
+
+        <!-- Tenants Section -->
+        <div class="section">
+            <h2>Healthcare Providers</h2>
+            <div id="tenantsLoading" class="loading">Loading tenants...</div>
+            <div id="tenantsError" class="error" style="display: none;"></div>
+            <table class="table" id="tenantsTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Provider Name</th>
+                        <th>Plan</th>
+                        <th>Status</th>
+                        <th>Claims Processed</th>
+                        <th>Last Activity</th>
+                    </tr>
+                </thead>
+                <tbody id="tenantsBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Claims Section -->
+        <div class="section">
+            <h2>Recent Claims</h2>
+            <div id="claimsLoading" class="loading">Loading claims...</div>
+            <div id="claimsError" class="error" style="display: none;"></div>
+            <table class="table" id="claimsTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Claim ID</th>
+                        <th>Patient Name</th>
+                        <th>Amount (SAR)</th>
+                        <th>Status</th>
+                        <th>Submitted</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="claimsBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://54.91.91.0:3001';
+
+        // Load dashboard data
+        async function loadDashboard() {
+            try {
+                // Load analytics
+                const analyticsResponse = await fetch(`${API_BASE}/analytics/dashboard`);
+                const analytics = await analyticsResponse.json();
+                
+                if (analytics.success) {
+                    document.getElementById('totalClaims').textContent = analytics.data.totalClaims.toLocaleString();
+                    document.getElementById('activePatients').textContent = analytics.data.activePatients.toLocaleString();
+                    document.getElementById('autoApproved').textContent = analytics.data.autoApproved.toLocaleString();
+                    document.getElementById('avgProcessingTime').textContent = analytics.data.avgProcessingTime;
+                }
+            } catch (error) {
+                console.error('Failed to load analytics:', error);
+            }
+        }
+
+        // Load tenants
+        async function loadTenants() {
+            try {
+                const response = await fetch(`${API_BASE}/tenants`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const tbody = document.getElementById('tenantsBody');
+                    tbody.innerHTML = data.data.map(tenant => `
+                        <tr>
+                            <td>${tenant.name}</td>
+                            <td><span class="status ${tenant.plan}">${tenant.plan}</span></td>
+                            <td><span class="status ${tenant.status}">${tenant.status}</span></td>
+                            <td>${tenant.claimsProcessed.toLocaleString()}</td>
+                            <td>${new Date(tenant.lastActivity).toLocaleDateString()}</td>
+                        </tr>
+                    `).join('');
+                    
+                    document.getElementById('tenantsLoading').style.display = 'none';
+                    document.getElementById('tenantsTable').style.display = 'table';
+                } else {
+                    throw new Error('Failed to load tenants');
+                }
+            } catch (error) {
+                document.getElementById('tenantsLoading').style.display = 'none';
+                document.getElementById('tenantsError').style.display = 'block';
+                document.getElementById('tenantsError').textContent = 'Failed to load tenants: ' + error.message;
+            }
+        }
+
+        // Load claims
+        async function loadClaims() {
+            try {
+                const response = await fetch(`${API_BASE}/claims`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const tbody = document.getElementById('claimsBody');
+                    tbody.innerHTML = data.data.map(claim => `
+                        <tr>
+                            <td>${claim.id}</td>
+                            <td>${claim.patientName}</td>
+                            <td>${claim.amount.toLocaleString()} SAR</td>
+                            <td><span class="status ${claim.status}">${claim.status}</span></td>
+                            <td>${new Date(claim.submittedAt).toLocaleDateString()}</td>
+                            <td><button class="btn" onclick="viewClaim('${claim.id}')">View</button></td>
+                        </tr>
+                    `).join('');
+                    
+                    document.getElementById('claimsLoading').style.display = 'none';
+                    document.getElementById('claimsTable').style.display = 'table';
+                } else {
+                    throw new Error('Failed to load claims');
+                }
+            } catch (error) {
+                document.getElementById('claimsLoading').style.display = 'none';
+                document.getElementById('claimsError').style.display = 'block';
+                document.getElementById('claimsError').textContent = 'Failed to load claims: ' + error.message;
+            }
+        }
+
+        // View claim details
+        function viewClaim(claimId) {
+            alert(`Viewing claim ${claimId}\n\nThis would open a detailed view of the claim with:\n- Patient information\n- Medical procedures\n- Insurance coverage\n- Processing history\n- NPHIES integration status`);
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboard();
+            loadTenants();
+            loadClaims();
+            
+            // Refresh data every 30 seconds
+            setInterval(() => {
+                loadDashboard();
+                loadTenants();
+                loadClaims();
+            }, 30000);
+        });
+    </script>
+</body>
+</html>

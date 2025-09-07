@@ -1,14 +1,9 @@
 import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
 
 const router = Router();
-const prisma = new PrismaClient();
 
 router.get('/', async (req, res) => {
   try {
-    // Check database connection
-    await prisma.$queryRaw`SELECT 1`;
-    
     res.json({
       status: 'healthy',
       service: 'tenant-manager',
@@ -22,7 +17,7 @@ router.get('/', async (req, res) => {
       status: 'unhealthy',
       service: 'tenant-manager',
       timestamp: new Date().toISOString(),
-      error: 'Database connection failed'
+      error: 'Service unavailable'
     });
   }
 });
