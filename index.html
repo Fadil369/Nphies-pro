@@ -404,6 +404,46 @@
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.5; transform: scale(1.2); }
         }
+
+        /* Floating Navigation */
+        .floating-nav {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 1rem;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            gap: 0.5rem;
+            z-index: 1000;
+            border: 1px solid var(--border);
+        }
+
+        .floating-nav a {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem;
+            border-radius: 50%;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-nav a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .floating-nav a.active {
+            background: var(--secondary);
+        }
     </style>
 </head>
 <body>
@@ -416,10 +456,14 @@
             <ul class="nav-links">
                 <li><a href="#features">Features</a></li>
                 <li><a href="#compliance">Compliance</a></li>
-                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="http://54.91.91.0:8081">Dashboard</a></li>
+                <li><a href="http://54.91.91.0:8082">Claims</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
-            <a href="http://54.91.91.0:8081" class="cta-button">Launch Dashboard</a>
+            <div style="display: flex; gap: 0.5rem;">
+                <a href="http://54.91.91.0:8081" class="cta-button">Dashboard</a>
+                <a href="http://54.91.91.0:8082" class="btn-secondary">Claims Management</a>
+            </div>
                 <a href="http://54.91.91.0:8082" class="btn-secondary">Claims Management</a>
         </nav>
     </header>
@@ -453,6 +497,7 @@
 
             <div class="cta-buttons">
                 <a href="http://54.91.91.0:8081" class="cta-button">Explore Dashboard</a>
+                <a href="http://54.91.91.0:8082" class="cta-button">Manage Claims</a>
                 <a href="#features" class="btn-secondary">Learn More</a>
             </div>
         </div>
@@ -545,7 +590,8 @@
                 Join leading Saudi healthcare providers in revolutionizing insurance processing with AI-powered automation and seamless NPHIES integration.
             </p>
             <div class="cta-buttons">
-                <a href="http://54.91.91.0:8081" class="cta-button">Start Free Trial</a>
+                <a href="http://54.91.91.0:8082" class="cta-button">Start Managing Claims</a>
+                <a href="http://54.91.91.0:8081" class="cta-button">View Dashboard</a>
                 <a href="mailto:sales@brainsait.com" class="btn-secondary">Contact Sales</a>
             </div>
         </div>
@@ -571,6 +617,14 @@
     <div class="status-indicator">
         <div class="pulse"></div>
         <span>System Online</span>
+    </div>
+
+    <!-- Floating Navigation -->
+    <div class="floating-nav">
+        <a href="http://54.91.91.0" class="active" title="Home">🏠</a>
+        <a href="http://54.91.91.0:8081" title="Dashboard">📊</a>
+        <a href="http://54.91.91.0:8082" title="Claims Management">📝</a>
+        <a href="http://54.91.91.0:8080" title="System Health">💚</a>
     </div>
 
     <script>

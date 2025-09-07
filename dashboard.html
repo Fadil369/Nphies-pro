@@ -21,6 +21,29 @@
             justify-content: space-between;
             align-items: center;
         }
+        
+        .nav-menu {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
         .logo { font-size: 1.5rem; font-weight: bold; }
         .container {
             max-width: 1200px;
@@ -274,12 +297,57 @@
             .modal-header, .modal-body { padding: 1rem; }
             .info-grid { grid-template-columns: 1fr; }
         }
+
+        /* Floating Navigation */
+        .floating-nav {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 1rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            display: flex;
+            gap: 0.5rem;
+            z-index: 1000;
+            border: 1px solid #e2e8f0;
+        }
+
+        .floating-nav a {
+            background: #667eea;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 50%;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-nav a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .floating-nav a.active {
+            background: #00a86b;
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="logo">🏥 BrainSAIT Digital Insurance Platform</div>
-        <div>Dashboard v1.0.0</div>
+        <div class="nav-menu">
+            <a href="http://54.91.91.0" class="nav-btn">🏠 Home</a>
+            <a href="http://54.91.91.0:8082" class="nav-btn">📝 Claims</a>
+            <a href="http://54.91.91.0:8080" class="nav-btn">💚 Health</a>
+            <span style="color: rgba(255,255,255,0.7);">Dashboard v1.0.0</span>
+        </div>
     </div>
 
     <div class="container">
@@ -569,3 +637,10 @@
     </script>
 </body>
 </html>
+    <!-- Floating Navigation -->
+    <div class="floating-nav">
+        <a href="http://54.91.91.0" title="Home">🏠</a>
+        <a href="http://54.91.91.0:8081" class="active" title="Dashboard">📊</a>
+        <a href="http://54.91.91.0:8082" title="Claims Management">📝</a>
+        <a href="http://54.91.91.0:8080" title="System Health">💚</a>
+    </div>

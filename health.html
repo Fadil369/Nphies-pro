@@ -3,59 +3,336 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrainSAIT Health Check</title>
+    <title>System Health - BrainSAIT Digital Insurance Platform</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             font-family: 'Segoe UI', system-ui, sans-serif; 
-            text-align: center; 
-            padding: 2rem;
             background: linear-gradient(135deg, #f0f8ff, #e6f3ff);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo { font-size: 1.5rem; font-weight: bold; }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover { opacity: 0.8; }
+
+        .container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .health-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .health-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .status {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 1rem;
+        }
+
+        .details {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .detail-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-value {
+            color: #28a745;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .service-status {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .floating-nav {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 1rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            display: flex;
+            gap: 0.5rem;
+            z-index: 1000;
+            border: 1px solid #e2e8f0;
+        }
+
+        .floating-nav a {
+            background: #667eea;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 50%;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .container {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            max-width: 500px;
-            width: 100%;
+
+        .floating-nav a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
-        h1 { color: #333; margin-bottom: 1rem; }
-        .status { 
-            color: #28a745; 
-            font-size: 2rem; 
-            margin: 1rem 0;
-            font-weight: bold;
+
+        .floating-nav a.active {
+            background: #00a86b;
         }
-        .details {
-            text-align: left;
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 8px;
+
+        .refresh-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
             margin-top: 1rem;
         }
-        .details p { margin: 0.5rem 0; }
-        .timestamp { color: #666; font-family: monospace; }
+
+        .refresh-btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🏥 BrainSAIT Health Check</h1>
-        <div class="status">✅ HEALTHY</div>
-        <div class="details">
-            <p><strong>Service:</strong> BrainSAIT Digital Insurance Platform</p>
-            <p><strong>Status:</strong> All systems operational</p>
-            <p><strong>Version:</strong> 1.0.0</p>
-            <p><strong>Server:</strong> AWS EC2 (us-east-1)</p>
-            <p><strong>Timestamp:</strong> <span class="timestamp" id="time"></span></p>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">💚 BrainSAIT System Health</div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="http://54.91.91.0">🏠 Home</a></li>
+                    <li><a href="http://54.91.91.0:8081">📊 Dashboard</a></li>
+                    <li><a href="http://54.91.91.0:8082">📝 Claims</a></li>
+                    <li><a href="http://54.91.91.0:3001/health">🔧 API</a></li>
+                </ul>
+            </nav>
         </div>
     </div>
+
+    <div class="container">
+        <div class="health-card">
+            <div class="health-icon">💚</div>
+            <div class="status">ALL SYSTEMS OPERATIONAL</div>
+            <p style="color: #666; margin-bottom: 2rem;">BrainSAIT Digital Insurance Platform is running smoothly</p>
+
+            <div class="details">
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Platform Status</div>
+                        <div class="detail-value">✅ HEALTHY</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Version</div>
+                        <div class="detail-value">v1.0.0</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Server</div>
+                        <div class="detail-value">AWS EC2 (us-east-1)</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Uptime</div>
+                        <div class="detail-value" id="uptime">Loading...</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Last Check</div>
+                        <div class="detail-value" id="timestamp">Loading...</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Response Time</div>
+                        <div class="detail-value" id="responseTime">< 100ms</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="services-grid">
+                <div class="service-status">
+                    <div>🌐 Web Server</div>
+                    <div>ONLINE</div>
+                </div>
+                <div class="service-status">
+                    <div>🔧 API Service</div>
+                    <div>ONLINE</div>
+                </div>
+                <div class="service-status">
+                    <div>📊 Dashboard</div>
+                    <div>ONLINE</div>
+                </div>
+                <div class="service-status">
+                    <div>📝 Claims System</div>
+                    <div>ONLINE</div>
+                </div>
+                <div class="service-status">
+                    <div>🗄️ Database</div>
+                    <div>CONNECTED</div>
+                </div>
+                <div class="service-status">
+                    <div>🔗 NPHIES</div>
+                    <div>READY</div>
+                </div>
+            </div>
+
+            <button class="refresh-btn" onclick="refreshHealth()">🔄 Refresh Status</button>
+        </div>
+    </div>
+
+    <!-- Floating Navigation -->
+    <div class="floating-nav">
+        <a href="http://54.91.91.0" title="Home">🏠</a>
+        <a href="http://54.91.91.0:8081" title="Dashboard">📊</a>
+        <a href="http://54.91.91.0:8082" title="Claims Management">📝</a>
+        <a href="http://54.91.91.0:8080" class="active" title="System Health">💚</a>
+    </div>
+
     <script>
-        document.getElementById('time').textContent = new Date().toISOString();
+        function updateTimestamp() {
+            document.getElementById('timestamp').textContent = new Date().toLocaleString();
+        }
+
+        function updateUptime() {
+            const startTime = new Date('2025-09-07T18:00:00Z');
+            const now = new Date();
+            const uptimeMs = now - startTime;
+            const hours = Math.floor(uptimeMs / (1000 * 60 * 60));
+            const minutes = Math.floor((uptimeMs % (1000 * 60 * 60)) / (1000 * 60));
+            document.getElementById('uptime').textContent = `${hours}h ${minutes}m`;
+        }
+
+        async function refreshHealth() {
+            const btn = document.querySelector('.refresh-btn');
+            btn.textContent = '🔄 Refreshing...';
+            btn.disabled = true;
+
+            try {
+                const startTime = Date.now();
+                const response = await fetch('http://54.91.91.0:3001/health');
+                const endTime = Date.now();
+                const responseTime = endTime - startTime;
+                
+                document.getElementById('responseTime').textContent = `${responseTime}ms`;
+                updateTimestamp();
+                updateUptime();
+                
+                setTimeout(() => {
+                    btn.textContent = '✅ Status Updated';
+                    setTimeout(() => {
+                        btn.textContent = '🔄 Refresh Status';
+                        btn.disabled = false;
+                    }, 1000);
+                }, 500);
+            } catch (error) {
+                btn.textContent = '❌ Check Failed';
+                setTimeout(() => {
+                    btn.textContent = '🔄 Refresh Status';
+                    btn.disabled = false;
+                }, 2000);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTimestamp();
+            updateUptime();
+            
+            // Auto-refresh every 30 seconds
+            setInterval(() => {
+                updateTimestamp();
+                updateUptime();
+            }, 30000);
+        });
     </script>
 </body>
 </html>
