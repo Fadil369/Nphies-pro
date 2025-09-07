@@ -139,7 +139,7 @@
         }
 
         .btn-secondary {
-            background: transparent;
+            background: rgba(102, 126, 234, 0.1);
             color: var(--primary);
             border: 2px solid var(--primary);
             padding: 0.6rem 1.25rem;
@@ -148,12 +148,45 @@
             font-weight: 600;
             font-size: 0.9rem;
             transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
         }
 
         .btn-secondary:hover {
             background: var(--primary);
             color: white;
             transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Hero section button override */
+        .hero .btn-secondary {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            padding: 0.75rem 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero .btn-secondary:hover {
+            background: white;
+            color: var(--primary);
+            border-color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.3);
+        }
+
+        /* CTA section button override */
+        .cta-section .btn-secondary {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .cta-section .btn-secondary:hover {
+            background: white;
+            color: var(--primary);
+            border-color: white;
         }
 
         /* Mobile Menu */
@@ -433,22 +466,6 @@
             gap: 1rem;
             justify-content: center;
             flex-wrap: wrap;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-secondary:hover {
-            background: white;
-            color: var(--primary);
         }
 
         /* Footer */
