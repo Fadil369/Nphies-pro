@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏥 BrainSAIT Digital Insurance Platform</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .logo { font-size: 4rem; margin-bottom: 1rem; }
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .subtitle { font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9; }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .feature-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .status {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 10px;
+        }
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #00ff00;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .info { margin-top: 2rem; font-size: 0.9rem; opacity: 0.7; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🏥</div>
+        <h1>BrainSAIT Digital Insurance Platform</h1>
+        <p class="subtitle">Comprehensive SaaS solution for Saudi Arabia's healthcare digitization</p>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🤖</div>
+                <h3>AI-Powered Claims</h3>
+                <p>Automated processing with ML</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔗</div>
+                <h3>NPHIES Integration</h3>
+                <p>Real-time eligibility verification</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📊</div>
+                <h3>Advanced Analytics</h3>
+                <p>Comprehensive insights</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🛡️</div>
+                <h3>Saudi Compliance</h3>
+                <p>HIPAA, NPHIES, PDPL compliant</p>
+            </div>
+        </div>
+        
+        <div class="status">
+            <span class="status-indicator"></span>
+            <strong>Platform Status: ONLINE</strong>
+        </div>
+        
+        <div class="info">
+            <p><strong>Server:</strong> AWS EC2 (us-east-1) | <strong>Version:</strong> 1.0.0</p>
+            <p><strong>Deployment:</strong> Docker + Terraform | <strong>Cost:</strong> $0 (Free Tier)</p>
+        </div>
+    </div>
+</body>
+</html>

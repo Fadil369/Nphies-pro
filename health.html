@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainSAIT Health Check</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+            text-align: center; 
+            padding: 2rem;
+            background: linear-gradient(135deg, #f0f8ff, #e6f3ff);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 { color: #333; margin-bottom: 1rem; }
+        .status { 
+            color: #28a745; 
+            font-size: 2rem; 
+            margin: 1rem 0;
+            font-weight: bold;
+        }
+        .details {
+            text-align: left;
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        .details p { margin: 0.5rem 0; }
+        .timestamp { color: #666; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 BrainSAIT Health Check</h1>
+        <div class="status">✅ HEALTHY</div>
+        <div class="details">
+            <p><strong>Service:</strong> BrainSAIT Digital Insurance Platform</p>
+            <p><strong>Status:</strong> All systems operational</p>
+            <p><strong>Version:</strong> 1.0.0</p>
+            <p><strong>Server:</strong> AWS EC2 (us-east-1)</p>
+            <p><strong>Timestamp:</strong> <span class="timestamp" id="time"></span></p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('time').textContent = new Date().toISOString();
+    </script>
+</body>
+</html>

@@ -14,7 +14,15 @@
     "test": "turbo test",
     "lint": "turbo lint",
     "clean": "turbo clean",
-    "type-check": "turbo type-check"
+    "type-check": "turbo type-check",
+    "setup:aws": "./scripts/setup-aws.sh",
+    "deploy": "./scripts/deploy.sh",
+    "dev:services": "concurrently \"npm run dev:tenant-manager\" \"npm run dev:claims-ai\"",
+    "dev:tenant-manager": "cd services/tenant-manager && npm run dev",
+    "dev:claims-ai": "cd services/claims-ai-engine && python src/main.py",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
   },
   "keywords": [
     "insurance",
@@ -38,6 +46,7 @@
     "@types/node": "^20.11.0",
     "typescript": "^5.3.0",
     "eslint": "^8.56.0",
-    "prettier": "^3.2.0"
+    "prettier": "^3.2.0",
+    "concurrently": "^8.2.2"
   }
 }

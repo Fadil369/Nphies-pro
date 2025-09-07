@@ -1,0 +1,102 @@
+version: '3.8'
+
+services:
+  # Web Application
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - AWS_REGION=${AWS_REGION}
+      - S3_BUCKET=${S3_BUCKET}
+    depends_on:
+      - tenant-manager
+      - claims-ai-engine
+    restart: unless-stopped
+    networks:
+      - nphies-network
+
+  # Tenant Manager Service
+  tenant-manager:
+    build:
+      context: ./services/tenant-manager
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - JWT_SECRET=${JWT_SECRET}
+    restart: unless-stopped
+    networks:
+      - nphies-network
+
+  # Claims AI Engine
+  claims-ai-engine:
+    build:
+      context: ./services/claims-ai-engine
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - ML_MODEL_PATH=/app/models
+    volumes:
+      - ./models:/app/models:ro
+    restart: unless-stopped
+    networks:
+      - nphies-network
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - web
+    restart: unless-stopped
+    networks:
+      - nphies-network
+
+  # Monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    restart: unless-stopped
+    networks:
+      - nphies-network
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    restart: unless-stopped
+    networks:
+      - nphies-network
+
+volumes:
+  grafana-storage:
+
+networks:
+  nphies-network:
+    driver: bridge
