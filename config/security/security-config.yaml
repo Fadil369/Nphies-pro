@@ -1,0 +1,290 @@
+# BrainSAIT Digital Insurance Platform - Security Configuration
+# Compliance: HIPAA, NPHIES, PDPL, CCHI aligned
+# Saudi Data Sovereignty and Healthcare Security Standards
+
+security:
+  # Encryption settings
+  encryption:
+    algorithm: "AES-256-GCM"
+    key_rotation_days: 90
+    data_at_rest: true
+    data_in_transit: true
+    key_management:
+      provider: "aws-kms"  # or "azure-keyvault", "gcp-kms"
+      region: "me-south-1"  # Saudi Arabia region
+      backup_regions: ["eu-west-1"]
+    
+  # Authentication and authorization
+  auth:
+    jwt:
+      algorithm: "RS256"
+      expiry_hours: 24
+      refresh_expiry_days: 30
+      issuer: "brainsait-digital-insurance"
+      audience: "nphies-pro-platform"
+    
+    mfa:
+      enabled: true
+      methods: ["totp", "sms", "email"]
+      grace_period_hours: 24
+      backup_codes: 10
+    
+    password_policy:
+      min_length: 12
+      require_uppercase: true
+      require_lowercase: true
+      require_numbers: true
+      require_symbols: true
+      history_count: 12
+      max_age_days: 90
+    
+    session:
+      timeout_minutes: 30
+      absolute_timeout_hours: 8
+      concurrent_sessions: 3
+  
+  # Role-based access control (RBAC)
+  rbac:
+    roles:
+      super_admin:
+        description: "Full system access"
+        permissions: ["*"]
+      
+      tenant_admin:
+        description: "Tenant administration"
+        permissions:
+          - "tenant:read"
+          - "tenant:write"
+          - "users:manage"
+          - "billing:read"
+          - "reports:read"
+      
+      claims_manager:
+        description: "Claims processing and management"
+        permissions:
+          - "claims:read"
+          - "claims:write"
+          - "claims:approve"
+          - "prior_auth:read"
+          - "prior_auth:write"
+      
+      medical_reviewer:
+        description: "Medical review and clinical decisions"
+        permissions:
+          - "claims:read"
+          - "claims:medical_review"
+          - "clinical_data:read"
+          - "diagnosis:validate"
+      
+      auditor:
+        description: "Audit and compliance monitoring"
+        permissions:
+          - "audit_logs:read"
+          - "compliance:read"
+          - "reports:read"
+          - "security_events:read"
+      
+      billing_admin:
+        description: "Billing and financial operations"
+        permissions:
+          - "billing:read"
+          - "billing:write"
+          - "invoices:generate"
+          - "payments:process"
+      
+      api_user:
+        description: "API access for integrations"
+        permissions:
+          - "api:claims_submit"
+          - "api:eligibility_check"
+          - "api:status_inquiry"
+    
+    permission_inheritance: true
+    role_hierarchy:
+      - "super_admin"
+      - "tenant_admin"
+      - ["claims_manager", "medical_reviewer", "auditor", "billing_admin"]
+      - "api_user"
+
+  # Network security
+  network:
+    allowed_ips:
+      production:
+        - "203.0.113.0/24"  # Saudi healthcare network
+        - "198.51.100.0/24"  # Insurance partner network
+      staging:
+        - "0.0.0.0/0"  # More permissive for testing
+    
+    rate_limiting:
+      global: "1000/hour"
+      per_tenant: "500/hour"
+      per_user: "100/hour"
+      api_endpoints:
+        "/api/v1/claims/process": "50/minute"
+        "/api/v1/prior-auth/request": "20/minute"
+        "/api/v1/eligibility/check": "100/minute"
+    
+    cors:
+      allowed_origins:
+        - "https://*.brainsait.com"
+        - "https://*.nphies-pro.sa"
+      allowed_methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+      allowed_headers: ["Authorization", "Content-Type", "X-Tenant-ID"]
+      max_age: 86400
+
+  # Data protection
+  data_protection:
+    pii_encryption: true
+    phi_encryption: true  # Protected Health Information
+    data_masking:
+      enabled: true
+      fields: ["national_id", "phone", "email", "medical_record_number"]
+      method: "partial"  # show first/last characters only
+    
+    data_retention:
+      claims_data: "7 years"  # Saudi insurance regulations
+      audit_logs: "10 years"  # Compliance requirement
+      user_activity: "2 years"
+      temporary_files: "24 hours"
+    
+    data_residency:
+      primary_region: "me-south-1"  # Saudi Arabia
+      backup_regions: ["eu-west-1"]  # Europe (GDPR compliant)
+      cross_border_restrictions: true
+      
+  # Audit and monitoring
+  audit:
+    log_level: "INFO"
+    sensitive_data_logging: false
+    events_to_log:
+      - "user_login"
+      - "user_logout"
+      - "claim_submission"
+      - "claim_approval"
+      - "claim_denial"
+      - "data_access"
+      - "configuration_changes"
+      - "security_events"
+      - "failed_authentications"
+    
+    log_retention: "10 years"
+    log_encryption: true
+    real_time_alerts:
+      - "multiple_failed_logins"
+      - "privilege_escalation"
+      - "unusual_data_access"
+      - "security_policy_violations"
+
+# Saudi Arabia specific compliance
+saudi_compliance:
+  # National Data Management Office (NDMO) requirements
+  ndmo:
+    data_localization: true
+    government_access_procedures: true
+    data_transfer_approval_required: true
+  
+  # Personal Data Protection Law (PDPL)
+  pdpl:
+    consent_required: true
+    data_subject_rights: true
+    privacy_by_design: true
+    dpo_required: true  # Data Protection Officer
+  
+  # Saudi Central Bank regulations (for insurance)
+  sama:
+    capital_adequacy: true
+    risk_management: true
+    governance_framework: true
+    reporting_requirements: true
+
+# NPHIES specific security
+nphies_security:
+  # PKI requirements
+  pki:
+    certificate_authority: "NPHIES-CA"
+    key_length: 2048
+    validity_period: "1 year"
+    revocation_checking: true
+  
+  # Digital signatures
+  digital_signatures:
+    algorithm: "RSA-SHA256"
+    required_for:
+      - "claim_submissions"
+      - "prior_authorizations"
+      - "eligibility_requests"
+  
+  # Secure communication
+  communication:
+    protocol: "TLS 1.3"
+    cipher_suites:
+      - "TLS_AES_256_GCM_SHA384"
+      - "TLS_CHACHA20_POLY1305_SHA256"
+    certificate_pinning: true
+
+# Healthcare specific security (HIPAA-like for Saudi)
+healthcare_security:
+  # Minimum necessary standard
+  minimum_necessary: true
+  
+  # Access controls for PHI
+  phi_access:
+    role_based: true
+    audit_trail: true
+    automatic_logoff: 30  # minutes
+  
+  # Business associate agreements
+  business_associates:
+    agreements_required: true
+    due_diligence: true
+    monitoring: true
+  
+  # Incident response
+  incident_response:
+    notification_timeline: "72 hours"
+    authorities_to_notify:
+      - "NDMO"
+      - "MOH"  # Ministry of Health
+      - "NCA"  # National Cybersecurity Authority
+    
+    breach_assessment:
+      risk_factors:
+        - "type_of_phi"
+        - "number_of_individuals"
+        - "likelihood_of_compromise"
+        - "mitigation_measures"
+
+# Environment-specific overrides
+environments:
+  development:
+    security:
+      auth:
+        mfa:
+          enabled: false
+      network:
+        allowed_ips:
+          - "0.0.0.0/0"
+      audit:
+        log_level: "DEBUG"
+  
+  staging:
+    security:
+      auth:
+        mfa:
+          enabled: true
+          grace_period_hours: 168  # 1 week
+      network:
+        rate_limiting:
+          global: "5000/hour"
+  
+  production:
+    security:
+      auth:
+        mfa:
+          enabled: true
+          grace_period_hours: 0  # No grace period
+      network:
+        rate_limiting:
+          global: "1000/hour"
+      audit:
+        real_time_alerts: true

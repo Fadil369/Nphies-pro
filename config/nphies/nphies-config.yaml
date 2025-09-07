@@ -1,0 +1,302 @@
+# BrainSAIT Digital Insurance Platform - NPHIES Integration Configuration
+# Saudi National Platform for Health Information Exchange Services
+# Healthcare digitization compliance and standards
+
+nphies:
+  # Platform information
+  platform:
+    name: "BrainSAIT Digital Insurance Platform"
+    version: "1.0.0"
+    vendor: "BrainSAIT Digital Solutions"
+    certification_id: "NPHIES-CERT-2024-001"
+    
+  # Environment configuration
+  environments:
+    development:
+      base_url: "https://dev-nphies.sa.gov"
+      cert_validation: false
+      timeout_seconds: 30
+    
+    staging:
+      base_url: "https://staging-nphies.sa.gov"
+      cert_validation: true
+      timeout_seconds: 60
+    
+    production:
+      base_url: "https://nphies.sa.gov"
+      cert_validation: true
+      timeout_seconds: 120
+      backup_url: "https://backup-nphies.sa.gov"
+
+  # Authentication and security
+  authentication:
+    method: "mutual_tls"
+    certificate:
+      location: "/config/certs/nphies-client.pem"
+      private_key: "/config/certs/nphies-client-key.pem"
+      ca_bundle: "/config/certs/nphies-ca-bundle.pem"
+      passphrase_env_var: "NPHIES_CERT_PASSPHRASE"
+    
+    token:
+      type: "bearer"
+      expiry_minutes: 60
+      refresh_threshold_minutes: 10
+      cache_tokens: true
+
+  # FHIR R4 configuration
+  fhir:
+    version: "4.0.1"
+    base_url: "/fhir/r4"
+    format: "application/fhir+json"
+    
+    # Supported resource types
+    resources:
+      patient: true
+      practitioner: true
+      organization: true
+      coverage: true
+      claim: true
+      claimresponse: true
+      preauthorization: true
+      eligibilityrequest: true
+      eligibilityresponse: true
+      
+    # Profile validations
+    profiles:
+      saudi_patient: "http://nphies.sa/fhir/ksa/nphies-fs/StructureDefinition/patient"
+      saudi_practitioner: "http://nphies.sa/fhir/ksa/nphies-fs/StructureDefinition/practitioner"
+      saudi_organization: "http://nphies.sa/fhir/ksa/nphies-fs/StructureDefinition/organization"
+      saudi_claim: "http://nphies.sa/fhir/ksa/nphies-fs/StructureDefinition/claim"
+
+  # Service endpoints
+  endpoints:
+    eligibility:
+      path: "/fhir/r4/CoverageEligibilityRequest"
+      method: "POST"
+      timeout: 30
+      retry_attempts: 3
+      
+    preauthorization:
+      path: "/fhir/r4/CoverageEligibilityRequest"
+      method: "POST"
+      timeout: 60
+      retry_attempts: 3
+      
+    claim_submission:
+      path: "/fhir/r4/Claim"
+      method: "POST"
+      timeout: 120
+      retry_attempts: 2
+      
+    claim_inquiry:
+      path: "/fhir/r4/Claim"
+      method: "GET"
+      timeout: 30
+      retry_attempts: 3
+      
+    practitioner_lookup:
+      path: "/fhir/r4/Practitioner"
+      method: "GET"
+      timeout: 15
+      retry_attempts: 3
+      
+    organization_lookup:
+      path: "/fhir/r4/Organization"
+      method: "GET"
+      timeout: 15
+      retry_attempts: 3
+
+  # Code systems and value sets
+  code_systems:
+    icd10:
+      system: "http://hl7.org/fhir/sid/icd-10"
+      version: "2019"
+      
+    icd10_cm:
+      system: "http://hl7.org/fhir/sid/icd-10-cm"
+      version: "2024"
+      
+    cpt:
+      system: "http://www.ama-assn.org/go/cpt"
+      version: "2024"
+      
+    snomed:
+      system: "http://snomed.info/sct"
+      version: "http://snomed.info/sct/731000124108"
+      
+    saudi_procedures:
+      system: "http://nphies.sa/terminology/CodeSystem/procedures"
+      version: "1.0"
+      
+    saudi_diagnoses:
+      system: "http://nphies.sa/terminology/CodeSystem/diagnoses"
+      version: "1.0"
+
+  # Message specifications
+  messaging:
+    # HL7 v2 to FHIR conversion
+    hl7v2_to_fhir:
+      enabled: true
+      supported_versions: ["2.5", "2.6"]
+      message_types:
+        - "ADT^A01"  # Admit patient
+        - "ADT^A03"  # Discharge patient
+        - "ORM^O01"  # Order message
+        - "ORU^R01"  # Observation result
+        
+    # SBS (Saudi Billing Standard) mapping
+    sbs_mapping:
+      enabled: true
+      version: "2.0"
+      mappings:
+        procedures: "/config/mappings/sbs-procedures.json"
+        diagnoses: "/config/mappings/sbs-diagnoses.json"
+        modifiers: "/config/mappings/sbs-modifiers.json"
+
+  # Validation rules
+  validation:
+    # Business rules
+    business_rules:
+      eligibility_check_required: true
+      preauth_threshold_sar: 5000
+      claim_submission_timeout_days: 90
+      
+    # Clinical validations
+    clinical:
+      diagnosis_procedure_consistency: true
+      age_gender_procedure_validation: true
+      medication_dosage_validation: true
+      
+    # Financial validations
+    financial:
+      amount_reasonableness_check: true
+      duplicate_claim_detection: true
+      fraud_indicators_check: true
+
+  # Saudi specific requirements
+  saudi_requirements:
+    # Ministry of Health requirements
+    moh:
+      provider_license_validation: true
+      facility_accreditation_check: true
+      medical_necessity_documentation: true
+      
+    # Saudi Food and Drug Authority
+    sfda:
+      medication_approval_check: true
+      medical_device_registration: true
+      
+    # Council of Cooperative Health Insurance
+    cchi:
+      policy_validation: true
+      coverage_verification: true
+      benefit_limitations_check: true
+
+  # Data quality and monitoring
+  monitoring:
+    # Performance metrics
+    performance:
+      response_time_threshold_ms: 5000
+      success_rate_threshold: 99.5
+      availability_threshold: 99.9
+      
+    # Data quality checks
+    data_quality:
+      completeness_threshold: 95
+      accuracy_threshold: 98
+      consistency_checks: true
+      
+    # Alerts and notifications
+    alerts:
+      high_error_rate: true
+      slow_response_time: true
+      authentication_failures: true
+      certificate_expiry_days: 30
+
+  # Retry and circuit breaker configuration
+  resilience:
+    retry:
+      max_attempts: 3
+      backoff_strategy: "exponential"
+      base_delay_ms: 1000
+      max_delay_ms: 30000
+      
+    circuit_breaker:
+      failure_threshold: 5
+      timeout_ms: 60000
+      recovery_timeout_ms: 30000
+      
+    bulkhead:
+      max_concurrent_requests: 100
+      queue_size: 500
+
+  # Caching configuration
+  caching:
+    # Eligibility responses
+    eligibility:
+      ttl_minutes: 60
+      max_entries: 10000
+      
+    # Provider lookups
+    providers:
+      ttl_hours: 24
+      max_entries: 5000
+      
+    # Organization data
+    organizations:
+      ttl_hours: 12
+      max_entries: 2000
+      
+    # Code systems
+    code_systems:
+      ttl_days: 7
+      max_entries: 50000
+
+  # Audit and compliance
+  audit:
+    # Transaction logging
+    transactions:
+      log_requests: true
+      log_responses: true
+      log_headers: false  # Security - don't log sensitive headers
+      log_body: true
+      
+    # Compliance tracking
+    compliance:
+      gdpr_logging: true
+      hipaa_logging: true
+      saudi_pdpl_logging: true
+      
+    # Performance tracking
+    performance:
+      response_time_logging: true
+      error_rate_tracking: true
+      throughput_monitoring: true
+
+# Integration patterns
+integration_patterns:
+  # Real-time eligibility checking
+  real_time_eligibility:
+    enabled: true
+    cache_duration_minutes: 30
+    fallback_to_cached: true
+    
+  # Batch claim submission
+  batch_processing:
+    enabled: true
+    batch_size: 100
+    processing_interval_minutes: 15
+    max_retry_attempts: 3
+    
+  # Webhook notifications
+  webhooks:
+    enabled: true
+    endpoints:
+      claim_status_update: "/api/webhooks/claim-status"
+      eligibility_response: "/api/webhooks/eligibility"
+      preauth_decision: "/api/webhooks/preauth"
+    
+    security:
+      signature_verification: true
+      ip_whitelist: true
+      timeout_seconds: 30

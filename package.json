@@ -1,0 +1,43 @@
+{
+  "name": "nphies-pro-digital-insurance",
+  "version": "1.0.0",
+  "description": "BrainSAIT Digital Insurance Platform - Comprehensive SaaS solution for Saudi Arabia's healthcare digitization",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "clean": "turbo clean",
+    "type-check": "turbo type-check"
+  },
+  "keywords": [
+    "insurance",
+    "healthcare",
+    "nphies",
+    "fhir",
+    "saas",
+    "multi-tenant",
+    "saudi-arabia",
+    "brainsait"
+  ],
+  "author": "BrainSAIT Digital Solutions",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.0",
+  "devDependencies": {
+    "turbo": "^1.12.0",
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.0"
+  }
+}
