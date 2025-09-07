@@ -1,7 +1,11 @@
 tunnel: brainsait-claims
-credentials-file: /home/ec2-user/.cloudflared/brainsait-claims.json
+credentials-file: /home/ec2-user/.cloudflared/3d82864a-6a9c-4eb1-afd7-eb2f111ca62f.json
 
 ingress:
+  # Home page (landing)
+  - hostname: claims-home.brainsait.com
+    service: http://localhost:80
+  
   # Claims management (main app)
   - hostname: claims.brainsait.com
     service: http://localhost:8082
@@ -17,10 +21,6 @@ ingress:
   # Health monitoring
   - hostname: health.brainsait.com
     service: http://localhost:8080
-  
-  # Main site (if needed)
-  - hostname: app.brainsait.com
-    service: http://localhost:80
   
   # Catch-all
   - service: http_status:404
