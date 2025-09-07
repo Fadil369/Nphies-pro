@@ -82,6 +82,198 @@
             font-size: 0.875rem;
         }
         .btn:hover { background: #5a6fd8; }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            max-width: 1000px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            padding: 2rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .claim-sections {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        .section h3 {
+            margin-bottom: 1rem;
+            color: #495057;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h4 {
+            margin: 1.5rem 0 1rem 0;
+            color: #6c757d;
+            font-size: 1rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-grid div {
+            background: white;
+            padding: 0.75rem;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+        }
+
+        .procedures-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .procedures-table th,
+        .procedures-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .procedures-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .procedures-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .timeline {
+            background: white;
+            border-radius: 5px;
+            padding: 1rem;
+            border: 1px solid #dee2e6;
+        }
+
+        .timeline-entry {
+            padding: 1rem;
+            border-left: 3px solid #667eea;
+            margin-left: 1rem;
+            margin-bottom: 1rem;
+            background: #f8f9fa;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .timeline-date {
+            font-size: 0.875rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .timeline-action {
+            font-weight: 600;
+            color: #495057;
+            margin: 0.25rem 0;
+        }
+
+        .timeline-user {
+            font-size: 0.875rem;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .summary-grid div {
+            background: white;
+            padding: 1rem;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+            text-align: center;
+        }
+
+        .status.verified { background: #d4edda; color: #155724; }
+        .status.pending_verification { background: #fff3cd; color: #856404; }
+
+        @media (max-width: 768px) {
+            .modal-overlay { padding: 1rem; }
+            .modal-content { max-height: 95vh; }
+            .modal-header, .modal-body { padding: 1rem; }
+            .info-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -234,8 +426,131 @@
         }
 
         // View claim details
-        function viewClaim(claimId) {
-            alert(`Viewing claim ${claimId}\n\nThis would open a detailed view of the claim with:\n- Patient information\n- Medical procedures\n- Insurance coverage\n- Processing history\n- NPHIES integration status`);
+        async function viewClaim(claimId) {
+            try {
+                const response = await fetch(`${API_BASE}/claims/${claimId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    showClaimModal(data.data);
+                } else {
+                    alert('Failed to load claim details');
+                }
+            } catch (error) {
+                alert('Error loading claim: ' + error.message);
+            }
+        }
+
+        // Show claim modal with real data
+        function showClaimModal(claim) {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Claim Details - ${claim.id}</h2>
+                        <button class="close-btn" onclick="closeModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="claim-sections">
+                            <div class="section">
+                                <h3>Patient Information</h3>
+                                <div class="info-grid">
+                                    <div><strong>Name:</strong> ${claim.patientName}</div>
+                                    <div><strong>Patient ID:</strong> ${claim.patientId}</div>
+                                    <div><strong>National ID:</strong> ${claim.nationalId}</div>
+                                    <div><strong>Date of Birth:</strong> ${claim.dateOfBirth ? new Date(claim.dateOfBirth).toLocaleDateString() : 'N/A'}</div>
+                                    <div><strong>Gender:</strong> ${claim.gender || 'N/A'}</div>
+                                    <div><strong>Phone:</strong> ${claim.phone || 'N/A'}</div>
+                                </div>
+                            </div>
+
+                            <div class="section">
+                                <h3>Medical Information</h3>
+                                <div class="info-grid">
+                                    <div><strong>Diagnosis:</strong> ${claim.diagnosis}</div>
+                                    <div><strong>Provider:</strong> ${claim.provider?.name || 'N/A'}</div>
+                                    <div><strong>Department:</strong> ${claim.provider?.department || 'N/A'}</div>
+                                    <div><strong>Physician:</strong> ${claim.provider?.physician || 'N/A'}</div>
+                                </div>
+                                
+                                <h4>Procedures & Services</h4>
+                                <table class="procedures-table">
+                                    <thead>
+                                        <tr><th>Code</th><th>Description</th><th>Amount (SAR)</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        ${claim.procedures?.map(proc => `
+                                            <tr>
+                                                <td>${proc.code || 'N/A'}</td>
+                                                <td>${proc.description || proc}</td>
+                                                <td>${proc.amount ? proc.amount.toLocaleString() : 'N/A'}</td>
+                                            </tr>
+                                        `).join('') || '<tr><td colspan="3">No procedures listed</td></tr>'}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="section">
+                                <h3>Insurance Coverage</h3>
+                                <div class="info-grid">
+                                    <div><strong>Policy Number:</strong> ${claim.insurance?.policyNumber || claim.insurancePolicy || 'N/A'}</div>
+                                    <div><strong>Insurance Company:</strong> ${claim.insurance?.company || 'N/A'}</div>
+                                    <div><strong>Coverage Type:</strong> ${claim.insurance?.coverage || 'N/A'}</div>
+                                    <div><strong>Copay:</strong> ${claim.insurance?.copay ? claim.insurance.copay.toLocaleString() + ' SAR' : 'N/A'}</div>
+                                    <div><strong>Deductible:</strong> ${claim.insurance?.deductible ? claim.insurance.deductible.toLocaleString() + ' SAR' : 'N/A'}</div>
+                                    <div><strong>Remaining Benefit:</strong> ${claim.insurance?.remainingBenefit ? claim.insurance.remainingBenefit.toLocaleString() + ' SAR' : 'N/A'}</div>
+                                </div>
+                            </div>
+
+                            <div class="section">
+                                <h3>NPHIES Integration Status</h3>
+                                <div class="info-grid">
+                                    <div><strong>Status:</strong> <span class="status ${claim.nphies?.status || claim.nphiesStatus}">${claim.nphies?.status || claim.nphiesStatus || 'Unknown'}</span></div>
+                                    <div><strong>Eligibility ID:</strong> ${claim.nphies?.eligibilityId || 'N/A'}</div>
+                                    <div><strong>Verification Date:</strong> ${claim.nphies?.verificationDate ? new Date(claim.nphies.verificationDate).toLocaleString() : 'Pending'}</div>
+                                    <div><strong>Coverage Details:</strong> ${claim.nphies?.coverageDetails || 'N/A'}</div>
+                                    <div><strong>Pre-Auth Required:</strong> ${claim.preAuthRequired ? 'Yes' : 'No'}</div>
+                                </div>
+                            </div>
+
+                            <div class="section">
+                                <h3>Processing History</h3>
+                                <div class="timeline">
+                                    ${claim.processingHistory?.map(entry => `
+                                        <div class="timeline-entry">
+                                            <div class="timeline-date">${new Date(entry.date).toLocaleString()}</div>
+                                            <div class="timeline-action">${entry.action}</div>
+                                            <div class="timeline-user">by ${entry.user}</div>
+                                        </div>
+                                    `).join('') || '<div>No processing history available</div>'}
+                                </div>
+                            </div>
+
+                            <div class="section">
+                                <h3>Claim Summary</h3>
+                                <div class="summary-grid">
+                                    <div><strong>Total Amount:</strong> ${claim.amount.toLocaleString()} SAR</div>
+                                    <div><strong>Status:</strong> <span class="status ${claim.status}">${claim.status}</span></div>
+                                    <div><strong>Submitted:</strong> ${new Date(claim.submittedAt).toLocaleString()}</div>
+                                    <div><strong>Processed:</strong> ${claim.processedAt ? new Date(claim.processedAt).toLocaleString() : 'Pending'}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            modal.style.display = 'flex';
+        }
+
+        // Close modal
+        function closeModal() {
+            const modal = document.querySelector('.modal-overlay');
+            if (modal) {
+                modal.remove();
+            }
         }
 
         // Initialize dashboard
