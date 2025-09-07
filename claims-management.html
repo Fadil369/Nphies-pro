@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claims Management - BrainSAIT Digital Insurance Platform</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo { font-size: 1.5rem; font-weight: bold; }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover { opacity: 0.8; }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .workflow-tabs {
+            display: flex;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 1rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: #f8f9fa;
+            color: #666;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background: #e9ecef;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 600px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section h3 {
+            color: #495057;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #495057;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-right: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .file-upload {
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 1rem 0;
+        }
+
+        .file-upload:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .file-upload.dragover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-processing { background: #cce5ff; color: #004085; }
+        .status-approved { background: #d4edda; color: #155724; }
+        .status-denied { background: #f8d7da; color: #721c24; }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .ai-analysis {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .fhir-viewer {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .mock-data-banner {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .mock-data-banner.active {
+            display: block;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #dee2e6;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.75rem;
+            top: 1rem;
+            width: 12px;
+            height: 12px;
+            background: #667eea;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #667eea;
+        }
+
+        .response-viewer {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        @media (max-width: 768px) {
+            .workflow-tabs {
+                flex-direction: column;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">🏥 BrainSAIT Claims Management</div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="http://54.91.91.0">Home</a></li>
+                    <li><a href="http://54.91.91.0:8081">Dashboard</a></li>
+                    <li><a href="#help">Help</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="mock-data-banner" id="mockBanner">
+            <strong>🎭 Mock Data Mode Active:</strong> You're using simulated data for testing. Toggle off to use real data entry.
+        </div>
+
+        <div class="workflow-tabs">
+            <button class="tab active" onclick="showTab('data-entry')">📝 Data Entry</button>
+            <button class="tab" onclick="showTab('upload')">📤 Upload</button>
+            <button class="tab" onclick="showTab('nphies')">🔗 NPHIES</button>
+            <button class="tab" onclick="showTab('processing')">⚙️ Processing</button>
+            <button class="tab" onclick="showTab('analysis')">🤖 AI Analysis</button>
+            <button class="tab" onclick="showTab('fhir')">📋 FHIR</button>
+        </div>
+
+        <!-- Data Entry Tab -->
+        <div class="tab-content active" id="data-entry">
+            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 2rem;">
+                <h2>Claim Data Entry</h2>
+                <div>
+                    <button class="btn btn-warning" onclick="toggleMockData()">🎭 Toggle Mock Data</button>
+                    <button class="btn btn-success" onclick="submitClaim()">Submit Claim</button>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Patient Information</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Patient Name *</label>
+                        <input type="text" id="patientName" placeholder="Enter patient full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>National ID *</label>
+                        <input type="text" id="nationalId" placeholder="10-digit National ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth *</label>
+                        <input type="date" id="dateOfBirth" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Gender *</label>
+                        <select id="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="phone" placeholder="+966XXXXXXXXX">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="email" placeholder="patient@email.com">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Medical Information</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Primary Diagnosis *</label>
+                        <input type="text" id="diagnosis" placeholder="ICD-10 code and description" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Healthcare Provider *</label>
+                        <select id="provider" required>
+                            <option value="">Select Provider</option>
+                            <option value="King Fahd Medical City">King Fahd Medical City</option>
+                            <option value="Saudi German Hospital">Saudi German Hospital</option>
+                            <option value="National Guard Hospital">National Guard Hospital</option>
+                            <option value="King Faisal Specialist Hospital">King Faisal Specialist Hospital</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Department</label>
+                        <input type="text" id="department" placeholder="e.g., Cardiology, Emergency">
+                    </div>
+                    <div class="form-group">
+                        <label>Attending Physician</label>
+                        <input type="text" id="physician" placeholder="Dr. Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Service Date *</label>
+                        <input type="date" id="serviceDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Total Amount (SAR) *</label>
+                        <input type="number" id="totalAmount" placeholder="0.00" step="0.01" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Procedures & Services</label>
+                    <div id="proceduresContainer">
+                        <div class="procedure-row" style="display: flex; gap: 1rem; margin-bottom: 0.5rem;">
+                            <input type="text" placeholder="CPT Code" style="flex: 1;">
+                            <input type="text" placeholder="Description" style="flex: 2;">
+                            <input type="number" placeholder="Amount" style="flex: 1;" step="0.01">
+                            <button type="button" class="btn btn-danger" onclick="removeProcedure(this)">Remove</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="addProcedure()">+ Add Procedure</button>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Insurance Information</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Insurance Company *</label>
+                        <select id="insuranceCompany" required>
+                            <option value="">Select Insurance Company</option>
+                            <option value="Bupa Arabia">Bupa Arabia</option>
+                            <option value="Tawuniya">Tawuniya</option>
+                            <option value="Malath Insurance">Malath Insurance</option>
+                            <option value="Saudi Enaya">Saudi Enaya</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Policy Number *</label>
+                        <input type="text" id="policyNumber" placeholder="Policy number" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Coverage Type</label>
+                        <select id="coverageType">
+                            <option value="Comprehensive">Comprehensive</option>
+                            <option value="Standard">Standard</option>
+                            <option value="Basic">Basic</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Pre-Authorization Required</label>
+                        <select id="preAuthRequired">
+                            <option value="false">No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Tab -->
+        <div class="tab-content" id="upload">
+            <h2>Document Upload</h2>
+            <p>Upload medical documents, prescriptions, lab results, and supporting files.</p>
+            
+            <div class="file-upload" onclick="document.getElementById('fileInput').click()">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📁</div>
+                <h3>Drop files here or click to browse</h3>
+                <p>Supported formats: PDF, JPG, PNG, DICOM, HL7, XML</p>
+                <input type="file" id="fileInput" multiple style="display: none;" onchange="handleFileUpload(event)">
+            </div>
+            
+            <div id="uploadedFiles"></div>
+            
+            <div style="margin-top: 2rem;">
+                <button class="btn" onclick="processDocuments()">🔍 Process Documents with AI</button>
+                <button class="btn btn-secondary" onclick="extractFHIR()">📋 Extract FHIR Data</button>
+            </div>
+        </div>
+
+        <!-- NPHIES Tab -->
+        <div class="tab-content" id="nphies">
+            <h2>NPHIES Integration</h2>
+            <p>Real-time integration with Saudi Arabia's National Platform for Health Information Exchange.</p>
+            
+            <div class="form-section">
+                <h3>Eligibility Verification</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Patient National ID</label>
+                        <input type="text" id="nphiesNationalId" placeholder="Enter National ID">
+                    </div>
+                    <div class="form-group">
+                        <label>Insurance Policy</label>
+                        <input type="text" id="nphiesPolicyId" placeholder="Policy ID">
+                    </div>
+                </div>
+                <button class="btn" onclick="verifyEligibility()">🔍 Verify Eligibility</button>
+                <button class="btn btn-secondary" onclick="mockNphiesResponse()">🎭 Mock Response</button>
+            </div>
+            
+            <div id="nphiesResponse" class="response-viewer" style="display: none;">
+                <h4>NPHIES Response</h4>
+                <div id="nphiesResponseContent"></div>
+            </div>
+            
+            <div class="form-section">
+                <h3>Prior Authorization</h3>
+                <button class="btn" onclick="requestPreAuth()">📋 Request Pre-Authorization</button>
+                <button class="btn btn-secondary" onclick="checkPreAuthStatus()">📊 Check Status</button>
+            </div>
+        </div>
+
+        <!-- Processing Tab -->
+        <div class="tab-content" id="processing">
+            <h2>Claim Processing Workflow</h2>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="processingProgress" style="width: 0%"></div>
+            </div>
+            
+            <div class="timeline" id="processingTimeline">
+                <div class="timeline-item">
+                    <h4>Claim Submitted</h4>
+                    <p>Initial claim data received and validated</p>
+                    <small>Status: <span class="status-indicator status-approved">Completed</span></small>
+                </div>
+            </div>
+            
+            <div style="margin-top: 2rem;">
+                <button class="btn" onclick="startProcessing()">▶️ Start Processing</button>
+                <button class="btn btn-success" onclick="approveClaim()">✅ Approve</button>
+                <button class="btn btn-danger" onclick="denyClaim()">❌ Deny</button>
+                <button class="btn btn-warning" onclick="requestMoreInfo()">❓ Request Info</button>
+            </div>
+        </div>
+
+        <!-- AI Analysis Tab -->
+        <div class="tab-content" id="analysis">
+            <h2>AI-Powered Analysis</h2>
+            
+            <div class="ai-analysis">
+                <h3>🤖 Intelligent Claim Analysis</h3>
+                <p>Our AI engine analyzes claims for accuracy, fraud detection, and automatic processing recommendations.</p>
+            </div>
+            
+            <div class="form-section">
+                <h3>Analysis Results</h3>
+                <div id="aiAnalysisResults">
+                    <p>Run analysis to see AI-powered insights...</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 2rem;">
+                <button class="btn" onclick="runAIAnalysis()">🧠 Run AI Analysis</button>
+                <button class="btn btn-secondary" onclick="fraudDetection()">🔍 Fraud Detection</button>
+                <button class="btn btn-warning" onclick="riskAssessment()">⚠️ Risk Assessment</button>
+            </div>
+        </div>
+
+        <!-- FHIR Tab -->
+        <div class="tab-content" id="fhir">
+            <h2>FHIR R4 Integration</h2>
+            <p>Fast Healthcare Interoperability Resources (FHIR) data representation and exchange.</p>
+            
+            <div class="form-section">
+                <h3>FHIR Resources</h3>
+                <button class="btn" onclick="generateFHIR()">📋 Generate FHIR Bundle</button>
+                <button class="btn btn-secondary" onclick="validateFHIR()">✅ Validate FHIR</button>
+                <button class="btn btn-warning" onclick="mockFHIRData()">🎭 Load Mock FHIR</button>
+            </div>
+            
+            <div class="fhir-viewer" id="fhirViewer">
+                <p>FHIR data will appear here...</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        const API_BASE = 'http://54.91.91.0:3001';
+        let mockDataMode = false;
+        let currentClaimId = null;
+
+        // Tab Management
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Mock Data Toggle
+        function toggleMockData() {
+            mockDataMode = !mockDataMode;
+            const banner = document.getElementById('mockBanner');
+            
+            if (mockDataMode) {
+                banner.classList.add('active');
+                loadMockData();
+            } else {
+                banner.classList.remove('active');
+                clearForm();
+            }
+        }
+
+        function loadMockData() {
+            document.getElementById('patientName').value = 'Omar Al-Mansouri';
+            document.getElementById('nationalId').value = '1234567890';
+            document.getElementById('dateOfBirth').value = '1985-06-15';
+            document.getElementById('gender').value = 'Male';
+            document.getElementById('phone').value = '+966501234567';
+            document.getElementById('email').value = 'omar.mansouri@email.com';
+            document.getElementById('diagnosis').value = 'Essential hypertension (I10)';
+            document.getElementById('provider').value = 'King Fahd Medical City';
+            document.getElementById('department').value = 'Cardiology';
+            document.getElementById('physician').value = 'Dr. Sarah Al-Zahra';
+            document.getElementById('serviceDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('totalAmount').value = '2500.00';
+            document.getElementById('insuranceCompany').value = 'Bupa Arabia';
+            document.getElementById('policyNumber').value = 'POL-BUPA-2024-001';
+            document.getElementById('coverageType').value = 'Comprehensive';
+        }
+
+        function clearForm() {
+            document.querySelectorAll('input, select, textarea').forEach(field => {
+                if (field.type !== 'button' && field.type !== 'submit') {
+                    field.value = '';
+                }
+            });
+        }
+
+        // Procedures Management
+        function addProcedure() {
+            const container = document.getElementById('proceduresContainer');
+            const newRow = document.createElement('div');
+            newRow.className = 'procedure-row';
+            newRow.style.cssText = 'display: flex; gap: 1rem; margin-bottom: 0.5rem;';
+            newRow.innerHTML = `
+                <input type="text" placeholder="CPT Code" style="flex: 1;">
+                <input type="text" placeholder="Description" style="flex: 2;">
+                <input type="number" placeholder="Amount" style="flex: 1;" step="0.01">
+                <button type="button" class="btn btn-danger" onclick="removeProcedure(this)">Remove</button>
+            `;
+            container.appendChild(newRow);
+        }
+
+        function removeProcedure(button) {
+            button.parentElement.remove();
+        }
+
+        // File Upload
+        function handleFileUpload(event) {
+            const files = event.target.files;
+            const container = document.getElementById('uploadedFiles');
+            container.innerHTML = '';
+            
+            Array.from(files).forEach(file => {
+                const fileDiv = document.createElement('div');
+                fileDiv.style.cssText = 'background: #f8f9fa; padding: 1rem; margin: 0.5rem 0; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;';
+                fileDiv.innerHTML = `
+                    <div>
+                        <strong>${file.name}</strong> (${(file.size / 1024 / 1024).toFixed(2)} MB)
+                        <div style="font-size: 0.875rem; color: #666;">Type: ${file.type || 'Unknown'}</div>
+                    </div>
+                    <button class="btn btn-danger" onclick="removeFile(this)">Remove</button>
+                `;
+                container.appendChild(fileDiv);
+            });
+        }
+
+        function removeFile(button) {
+            button.parentElement.remove();
+        }
+
+        // Claim Submission
+        async function submitClaim() {
+            const claimData = {
+                patientName: document.getElementById('patientName').value,
+                nationalId: document.getElementById('nationalId').value,
+                dateOfBirth: document.getElementById('dateOfBirth').value,
+                gender: document.getElementById('gender').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                diagnosis: document.getElementById('diagnosis').value,
+                provider: document.getElementById('provider').value,
+                department: document.getElementById('department').value,
+                physician: document.getElementById('physician').value,
+                serviceDate: document.getElementById('serviceDate').value,
+                totalAmount: parseFloat(document.getElementById('totalAmount').value),
+                insuranceCompany: document.getElementById('insuranceCompany').value,
+                policyNumber: document.getElementById('policyNumber').value,
+                coverageType: document.getElementById('coverageType').value,
+                preAuthRequired: document.getElementById('preAuthRequired').value === 'true'
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/claims`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(claimData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentClaimId = result.data.id;
+                    alert(`✅ Claim submitted successfully!\nClaim ID: ${currentClaimId}`);
+                    showTab('processing');
+                    startProcessing();
+                } else {
+                    alert('❌ Failed to submit claim: ' + result.error);
+                }
+            } catch (error) {
+                alert('❌ Error submitting claim: ' + error.message);
+            }
+        }
+
+        // NPHIES Integration
+        async function verifyEligibility() {
+            const nationalId = document.getElementById('nphiesNationalId').value;
+            
+            if (!nationalId) {
+                alert('Please enter National ID');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/nphies/eligibility/${nationalId}`);
+                const result = await response.json();
+                showNphiesResponse(result);
+            } catch (error) {
+                alert('Error verifying eligibility: ' + error.message);
+            }
+        }
+
+        function mockNphiesResponse() {
+            const mockResponse = {
+                success: true,
+                data: {
+                    patientId: '1234567890',
+                    eligible: true,
+                    coverage: 'Full Coverage',
+                    policyNumber: 'POL-MOCK-2024-001',
+                    expiryDate: '2025-12-31',
+                    copay: 250.00,
+                    deductible: 500.00,
+                    remainingBenefit: 45000.00,
+                    preAuthRequired: false
+                }
+            };
+            showNphiesResponse(mockResponse);
+        }
+
+        function showNphiesResponse(response) {
+            const container = document.getElementById('nphiesResponse');
+            const content = document.getElementById('nphiesResponseContent');
+            
+            if (response.success) {
+                content.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <div><strong>Patient ID:</strong> ${response.data.patientId}</div>
+                        <div><strong>Eligible:</strong> <span class="status-indicator ${response.data.eligible ? 'status-approved' : 'status-denied'}">${response.data.eligible ? 'Yes' : 'No'}</span></div>
+                        <div><strong>Coverage:</strong> ${response.data.coverage}</div>
+                        <div><strong>Policy:</strong> ${response.data.policyNumber}</div>
+                        <div><strong>Expiry:</strong> ${response.data.expiryDate}</div>
+                        <div><strong>Remaining Benefit:</strong> ${response.data.remainingBenefit?.toLocaleString()} SAR</div>
+                    </div>
+                `;
+            } else {
+                content.innerHTML = `<div style="color: #dc3545;">Error: ${response.error}</div>`;
+            }
+            
+            container.style.display = 'block';
+        }
+
+        // Processing Workflow
+        function startProcessing() {
+            const timeline = document.getElementById('processingTimeline');
+            const progress = document.getElementById('processingProgress');
+            
+            timeline.innerHTML = '';
+            progress.style.width = '0%';
+            
+            const steps = [
+                { title: 'Claim Received', description: 'Initial validation and data entry', delay: 500 },
+                { title: 'NPHIES Verification', description: 'Eligibility and coverage verification', delay: 1500 },
+                { title: 'Medical Review', description: 'Clinical validation and coding review', delay: 2500 },
+                { title: 'AI Analysis', description: 'Automated fraud detection and risk assessment', delay: 3500 },
+                { title: 'Final Decision', description: 'Approval or denial determination', delay: 4500 }
+            ];
+            
+            steps.forEach((step, index) => {
+                setTimeout(() => {
+                    addTimelineItem(step.title, step.description, 'processing');
+                    progress.style.width = `${((index + 1) / steps.length) * 100}%`;
+                    
+                    if (index === steps.length - 1) {
+                        setTimeout(() => {
+                            updateTimelineItem(steps.length - 1, 'approved');
+                        }, 1000);
+                    }
+                }, step.delay);
+            });
+        }
+
+        function addTimelineItem(title, description, status) {
+            const timeline = document.getElementById('processingTimeline');
+            const item = document.createElement('div');
+            item.className = 'timeline-item';
+            item.innerHTML = `
+                <h4>${title}</h4>
+                <p>${description}</p>
+                <small>Status: <span class="status-indicator status-${status}">${status === 'processing' ? 'Processing' : 'Completed'}</span></small>
+            `;
+            timeline.appendChild(item);
+        }
+
+        function updateTimelineItem(index, status) {
+            const items = document.querySelectorAll('.timeline-item');
+            if (items[index]) {
+                const statusSpan = items[index].querySelector('.status-indicator');
+                statusSpan.className = `status-indicator status-${status}`;
+                statusSpan.textContent = status === 'approved' ? 'Approved' : 'Completed';
+            }
+        }
+
+        // AI Analysis
+        function runAIAnalysis() {
+            const container = document.getElementById('aiAnalysisResults');
+            container.innerHTML = '<p>🔄 Running AI analysis...</p>';
+            
+            setTimeout(() => {
+                container.innerHTML = `
+                    <div style="display: grid; gap: 1rem;">
+                        <div style="background: #d4edda; padding: 1rem; border-radius: 5px; border-left: 4px solid #28a745;">
+                            <h4>✅ Recommendation: APPROVE</h4>
+                            <p>Confidence Score: 94.2%</p>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 1rem; border-radius: 5px;">
+                            <h4>📊 Analysis Details</h4>
+                            <ul>
+                                <li>Medical coding accuracy: 98%</li>
+                                <li>Provider credibility: High</li>
+                                <li>Patient history: Normal</li>
+                                <li>Fraud risk: Low (2.1%)</li>
+                                <li>Cost reasonableness: Within range</li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }, 2000);
+        }
+
+        // FHIR Integration
+        function generateFHIR() {
+            const viewer = document.getElementById('fhirViewer');
+            viewer.innerHTML = '🔄 Generating FHIR bundle...';
+            
+            setTimeout(() => {
+                const fhirBundle = {
+                    resourceType: "Bundle",
+                    id: "claim-bundle-001",
+                    type: "collection",
+                    entry: [
+                        {
+                            resource: {
+                                resourceType: "Patient",
+                                id: "patient-001",
+                                identifier: [{ value: "1234567890" }],
+                                name: [{ family: "Al-Mansouri", given: ["Omar"] }],
+                                gender: "male",
+                                birthDate: "1985-06-15"
+                            }
+                        },
+                        {
+                            resource: {
+                                resourceType: "Claim",
+                                id: "claim-001",
+                                status: "active",
+                                type: { coding: [{ code: "institutional" }] },
+                                patient: { reference: "Patient/patient-001" },
+                                total: { value: 2500.00, currency: "SAR" }
+                            }
+                        }
+                    ]
+                };
+                
+                viewer.innerHTML = `<pre>${JSON.stringify(fhirBundle, null, 2)}</pre>`;
+            }, 1500);
+        }
+
+        function mockFHIRData() { generateFHIR(); }
+        function validateFHIR() { alert('✅ FHIR validation passed!'); }
+        function processDocuments() { alert('🔍 AI processing completed!'); }
+        function extractFHIR() { showTab('fhir'); generateFHIR(); }
+        function approveClaim() { alert('✅ Claim Approved!'); }
+        function denyClaim() { alert('❌ Claim Denied!'); }
+        function requestMoreInfo() { alert('❓ Additional info requested!'); }
+        function requestPreAuth() { alert('📋 Pre-authorization requested!'); }
+        function checkPreAuthStatus() { alert('📊 Pre-auth status: Approved'); }
+        function fraudDetection() { alert('🔍 No fraud detected!'); }
+        function riskAssessment() { alert('⚠️ Risk level: Low'); }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('serviceDate').value = new Date().toISOString().split('T')[0];
+        });
+    </script>
+</body>
+</html>
