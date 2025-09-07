@@ -38,10 +38,11 @@
             top: 0;
             width: 100%;
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--border);
             z-index: 1000;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
         }
 
         .nav {
@@ -51,31 +52,71 @@
             justify-content: space-between;
             align-items: center;
             padding: 1rem 2rem;
+            min-height: 70px;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
             font-weight: 700;
             font-size: 1.5rem;
             color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            filter: drop-shadow(0 2px 4px rgba(102, 126, 234, 0.3));
         }
 
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 2.5rem;
             list-style: none;
+            align-items: center;
         }
 
         .nav-links a {
             text-decoration: none;
             color: var(--text-secondary);
             font-weight: 500;
-            transition: color 0.3s ease;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
         }
 
-        .nav-links a:hover { color: var(--primary); }
+        .nav-links a:hover { 
+            color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
 
         .cta-button {
             background: var(--primary);
@@ -84,9 +125,101 @@
             border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
             border: none;
             cursor: pointer;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .cta-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 0.6rem 1.25rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn:hover {
+            background: var(--bg-light);
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            list-style: none;
+            padding: 0 2rem;
+        }
+
+        .mobile-nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-nav-links a:hover {
+            color: var(--primary);
+            padding-left: 1rem;
+        }
+
+        .mobile-nav-links a:last-child {
+            border-bottom: none;
+        }
+
+        .mobile-actions {
+            padding: 1rem 2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
         .cta-button:hover {
@@ -358,10 +491,12 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            .nav { padding: 1rem; }
+            .nav-links { display: none; }
+            .nav-actions { display: none; }
+            .mobile-menu-btn { display: block; }
             .hero h1 { font-size: 2.5rem; line-height: 1.1; }
             .hero-subtitle { font-size: 1.1rem; }
-            .nav-links { display: none; }
-            .nav { padding: 0.75rem 1rem; }
             .hero { padding: 6rem 1rem 3rem; }
             .hero-stats { 
                 grid-template-columns: repeat(2, 1fr); 
@@ -413,6 +548,8 @@
         }
 
         @media (max-width: 480px) {
+            .logo { font-size: 1.25rem; }
+            .logo-icon { font-size: 1.75rem; }
             .hero h1 { font-size: 2rem; }
             .hero-stats { grid-template-columns: 1fr; }
             .stat-number { font-size: 1.5rem; }
@@ -506,9 +643,10 @@
     <!-- Header -->
     <header class="header">
         <nav class="nav">
-            <div class="logo">
-                🏥 BrainSAIT
-            </div>
+            <a href="http://54.91.91.0" class="logo">
+                <span class="logo-icon">🏥</span>
+                <span>BrainSAIT</span>
+            </a>
             <ul class="nav-links">
                 <li><a href="#features">Features</a></li>
                 <li><a href="#compliance">Compliance</a></li>
@@ -516,11 +654,24 @@
                 <li><a href="http://54.91.91.0:8082">Claims</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
-            <div style="display: flex; gap: 0.5rem;">
-                <a href="http://54.91.91.0:8081" class="cta-button">Dashboard</a>
-                <a href="http://54.91.91.0:8082" class="btn-secondary">Claims Management</a>
+            <div class="nav-actions">
+                <a href="http://54.91.91.0:8081" class="btn-secondary">Dashboard</a>
+                <a href="http://54.91.91.0:8082" class="cta-button">Claims Management</a>
             </div>
-                <a href="http://54.91.91.0:8082" class="btn-secondary">Claims Management</a>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+            <div class="mobile-menu" id="mobileMenu">
+                <ul class="mobile-nav-links">
+                    <li><a href="#features" onclick="closeMobileMenu()">Features</a></li>
+                    <li><a href="#compliance" onclick="closeMobileMenu()">Compliance</a></li>
+                    <li><a href="http://54.91.91.0:8081" onclick="closeMobileMenu()">Dashboard</a></li>
+                    <li><a href="http://54.91.91.0:8082" onclick="closeMobileMenu()">Claims</a></li>
+                    <li><a href="#contact" onclick="closeMobileMenu()">Contact</a></li>
+                </ul>
+                <div class="mobile-actions">
+                    <a href="http://54.91.91.0:8081" class="btn-secondary">Dashboard</a>
+                    <a href="http://54.91.91.0:8082" class="cta-button">Claims Management</a>
+                </div>
+            </div>
         </nav>
     </header>
 
@@ -746,6 +897,27 @@
         // Load real stats on page load
         updateStats();
         setInterval(updateStats, 30000); // Update every 30 seconds
+
+        // Mobile menu functionality
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.remove('active');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            
+            if (!mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+                mobileMenu.classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html>
