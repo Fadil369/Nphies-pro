@@ -1,0 +1,26 @@
+tunnel: brainsait-claims
+credentials-file: /home/ec2-user/.cloudflared/brainsait-claims.json
+
+ingress:
+  # Claims management (main app)
+  - hostname: claims.brainsait.com
+    service: http://localhost:8082
+  
+  # Dashboard
+  - hostname: dashboard.brainsait.com
+    service: http://localhost:8081
+  
+  # API
+  - hostname: api.brainsait.com
+    service: http://localhost:3001
+  
+  # Health monitoring
+  - hostname: health.brainsait.com
+    service: http://localhost:8080
+  
+  # Main site (if needed)
+  - hostname: app.brainsait.com
+    service: http://localhost:80
+  
+  # Catch-all
+  - service: http_status:404
