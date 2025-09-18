@@ -1,0 +1,349 @@
+        <!-- Enhanced Data Entry Tab -->
+        <div class="tab-content active" id="data-entry">
+            <!-- Header Section -->
+            <div class="data-entry-header">
+                <div class="header-left">
+                    <h2>🏥 Claim Data Entry</h2>
+                    <p class="subtitle">Complete claim information for NPHIES submission</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-outline" onclick="saveDraft()">💾 Save Draft</button>
+                    <button class="btn btn-warning" onclick="toggleMockData()">🎭 Mock Data</button>
+                    <button class="btn btn-primary" onclick="validateClaim()">✅ Validate</button>
+                    <button class="btn btn-success" onclick="submitClaim()">🚀 Submit</button>
+                </div>
+            </div>
+
+            <!-- Progress Indicator -->
+            <div class="form-progress">
+                <div class="progress-steps">
+                    <div class="step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Patient Info</div>
+                    </div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Medical Info</div>
+                    </div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Insurance</div>
+                    </div>
+                    <div class="step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Review</div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="formProgress" style="width: 25%"></div>
+                </div>
+            </div>
+
+            <!-- Form Steps -->
+            <div class="form-steps">
+                <!-- Step 1: Patient Information -->
+                <div class="form-step active" id="step-1">
+                    <div class="step-header">
+                        <h3>👤 Patient Information</h3>
+                        <p>Enter complete patient demographics and contact details</p>
+                    </div>
+
+                    <div class="form-grid enhanced">
+                        <div class="form-group required">
+                            <label>Patient Full Name *</label>
+                            <input type="text" id="patientName" placeholder="Enter full name in Arabic/English" required>
+                            <div class="field-help">As per official ID document</div>
+                        </div>
+                        
+                        <div class="form-group required">
+                            <label>National ID / Iqama *</label>
+                            <input type="text" id="nationalId" placeholder="10-digit National ID" required maxlength="10" pattern="[0-9]{10}">
+                            <div class="field-help">Saudi National ID or Iqama number</div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label>Date of Birth *</label>
+                            <input type="date" id="dateOfBirth" required>
+                            <div class="field-help">Patient's birth date</div>
+                        </div>
+
+                        <div class="form-group required">
+                            <label>Gender *</label>
+                            <select id="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male / ذكر</option>
+                                <option value="Female">Female / أنثى</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" id="phone" placeholder="+966XXXXXXXXX" pattern="^\+966[0-9]{9}$">
+                            <div class="field-help">Saudi mobile number format</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="email" placeholder="patient@email.com">
+                            <div class="field-help">For claim notifications</div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Address</label>
+                            <textarea id="address" rows="3" placeholder="Complete address in Saudi Arabia"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>City</label>
+                            <select id="city">
+                                <option value="">Select City</option>
+                                <option value="Riyadh">Riyadh / الرياض</option>
+                                <option value="Jeddah">Jeddah / جدة</option>
+                                <option value="Dammam">Dammam / الدمام</option>
+                                <option value="Mecca">Mecca / مكة</option>
+                                <option value="Medina">Medina / المدينة</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Postal Code</label>
+                            <input type="text" id="postalCode" placeholder="12345" pattern="[0-9]{5}">
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button class="btn btn-primary" onclick="nextStep(2)">Next: Medical Info →</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Medical Information -->
+                <div class="form-step" id="step-2">
+                    <div class="step-header">
+                        <h3>🏥 Medical Information</h3>
+                        <p>Enter diagnosis, procedures, and treatment details</p>
+                    </div>
+
+                    <div class="form-grid enhanced">
+                        <div class="form-group required full-width">
+                            <label>Primary Diagnosis *</label>
+                            <div class="diagnosis-input">
+                                <input type="text" id="diagnosisCode" placeholder="ICD-10 Code" style="width: 150px;">
+                                <input type="text" id="diagnosisDesc" placeholder="Diagnosis description" style="flex: 1;">
+                                <button type="button" class="btn btn-outline" onclick="searchDiagnosis()">🔍 Search</button>
+                            </div>
+                            <div class="field-help">ICD-10 code and description</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Secondary Diagnosis</label>
+                            <input type="text" id="secondaryDiagnosis" placeholder="Additional diagnosis if applicable">
+                        </div>
+
+                        <div class="form-group required">
+                            <label>Healthcare Provider *</label>
+                            <select id="provider" required>
+                                <option value="">Select Provider</option>
+                                <option value="King Fahd Medical City">King Fahd Medical City</option>
+                                <option value="Saudi German Hospital">Saudi German Hospital</option>
+                                <option value="National Guard Hospital">National Guard Hospital</option>
+                                <option value="King Faisal Specialist Hospital">King Faisal Specialist Hospital</option>
+                                <option value="Prince Sultan Military Medical City">Prince Sultan Military Medical City</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Department/Specialty</label>
+                            <select id="department">
+                                <option value="">Select Department</option>
+                                <option value="Emergency">Emergency / الطوارئ</option>
+                                <option value="Cardiology">Cardiology / القلب</option>
+                                <option value="Orthopedics">Orthopedics / العظام</option>
+                                <option value="Pediatrics">Pediatrics / الأطفال</option>
+                                <option value="Internal Medicine">Internal Medicine / الباطنة</option>
+                                <option value="Surgery">Surgery / الجراحة</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Attending Physician</label>
+                            <input type="text" id="physician" placeholder="Dr. Name">
+                        </div>
+
+                        <div class="form-group required">
+                            <label>Service Date *</label>
+                            <input type="date" id="serviceDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Admission Date</label>
+                            <input type="date" id="admissionDate">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Discharge Date</label>
+                            <input type="date" id="dischargeDate">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Visit Type</label>
+                            <select id="visitType">
+                                <option value="Outpatient">Outpatient / عيادة خارجية</option>
+                                <option value="Inpatient">Inpatient / تنويم</option>
+                                <option value="Emergency">Emergency / طوارئ</option>
+                                <option value="Day Surgery">Day Surgery / جراحة يوم واحد</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Procedures Section -->
+                    <div class="procedures-section">
+                        <h4>🔬 Procedures & Services</h4>
+                        <div id="proceduresContainer">
+                            <div class="procedure-row">
+                                <input type="text" placeholder="CPT Code" class="procedure-code">
+                                <input type="text" placeholder="Procedure description" class="procedure-desc">
+                                <input type="number" placeholder="Quantity" class="procedure-qty" value="1" min="1">
+                                <input type="number" placeholder="Amount (SAR)" class="procedure-amount" step="0.01">
+                                <button type="button" class="btn btn-danger btn-sm" onclick="removeProcedure(this)">×</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline" onclick="addProcedure()">+ Add Procedure</button>
+                    </div>
+
+                    <div class="step-actions">
+                        <button class="btn btn-secondary" onclick="prevStep(1)">← Previous</button>
+                        <button class="btn btn-primary" onclick="nextStep(3)">Next: Insurance →</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Insurance Information -->
+                <div class="form-step" id="step-3">
+                    <div class="step-header">
+                        <h3>🛡️ Insurance Information</h3>
+                        <p>Enter insurance coverage and policy details</p>
+                    </div>
+
+                    <div class="form-grid enhanced">
+                        <div class="form-group required">
+                            <label>Insurance Company *</label>
+                            <select id="insuranceCompany" required onchange="updatePolicyInfo()">
+                                <option value="">Select Insurance Company</option>
+                                <option value="Bupa Arabia">Bupa Arabia</option>
+                                <option value="Tawuniya">Tawuniya / التعاونية</option>
+                                <option value="Malath Insurance">Malath Insurance / ملاذ</option>
+                                <option value="Saudi Enaya">Saudi Enaya / عناية</option>
+                                <option value="Al Rajhi Takaful">Al Rajhi Takaful / الراجحي تكافل</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group required">
+                            <label>Policy Number *</label>
+                            <input type="text" id="policyNumber" placeholder="Policy number" required>
+                            <button type="button" class="btn btn-outline btn-sm" onclick="verifyPolicy()">Verify</button>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Member ID</label>
+                            <input type="text" id="memberId" placeholder="Member identification">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Coverage Type</label>
+                            <select id="coverageType">
+                                <option value="Comprehensive">Comprehensive / شامل</option>
+                                <option value="Standard">Standard / عادي</option>
+                                <option value="Basic">Basic / أساسي</option>
+                                <option value="VIP">VIP / كبار الشخصيات</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Policy Start Date</label>
+                            <input type="date" id="policyStartDate">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Policy End Date</label>
+                            <input type="date" id="policyEndDate">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Copay Amount (SAR)</label>
+                            <input type="number" id="copayAmount" placeholder="0.00" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Deductible (SAR)</label>
+                            <input type="number" id="deductible" placeholder="0.00" step="0.01">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Pre-Authorization</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="preAuthRequired">
+                                    <span class="checkmark"></span>
+                                    Pre-authorization required for this claim
+                                </label>
+                                <input type="text" id="preAuthNumber" placeholder="Pre-auth number (if applicable)" style="margin-top: 0.5rem;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button class="btn btn-secondary" onclick="prevStep(2)">← Previous</button>
+                        <button class="btn btn-primary" onclick="nextStep(4)">Next: Review →</button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Review & Submit -->
+                <div class="form-step" id="step-4">
+                    <div class="step-header">
+                        <h3>📋 Review & Submit</h3>
+                        <p>Review all information before submitting to NPHIES</p>
+                    </div>
+
+                    <div class="review-sections">
+                        <div class="review-section">
+                            <h4>👤 Patient Information</h4>
+                            <div id="reviewPatient" class="review-content"></div>
+                        </div>
+
+                        <div class="review-section">
+                            <h4>🏥 Medical Information</h4>
+                            <div id="reviewMedical" class="review-content"></div>
+                        </div>
+
+                        <div class="review-section">
+                            <h4>🛡️ Insurance Information</h4>
+                            <div id="reviewInsurance" class="review-content"></div>
+                        </div>
+
+                        <div class="review-section">
+                            <h4>💰 Financial Summary</h4>
+                            <div id="reviewFinancial" class="review-content"></div>
+                        </div>
+                    </div>
+
+                    <div class="submission-options">
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="confirmAccuracy" required>
+                                <span class="checkmark"></span>
+                                I confirm that all information provided is accurate and complete
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="agreeTerms" required>
+                                <span class="checkmark"></span>
+                                I agree to the terms and conditions for NPHIES submission
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button class="btn btn-secondary" onclick="prevStep(3)">← Previous</button>
+                        <button class="btn btn-success btn-large" onclick="submitClaim()">🚀 Submit to NPHIES</button>
+                    </div>
+                </div>
+            </div>
+        </div>

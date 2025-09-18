@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="BrainSAIT Digital Insurance Platform - NPHIES Compliant Healthcare Dashboard"
+    />
+    <meta
+      name="keywords"
+      content="healthcare, insurance, NPHIES, FHIR, Saudi Arabia, digital health"
+    />
+    <meta name="author" content="BrainSAIT Digital Solutions" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <title>🏥 BrainSAIT Dashboard - Digital Insurance Platform</title>
+
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      rel="stylesheet"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+    />
+
+    <!-- Chart.js for data visualization -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"
+      integrity="sha512-6HrPqAvK+lZElIZ4mZ64fyxIBTsaX5zAFZg2V/2WT+iKPrFzTzvx6QAsLW2OaLwobhMYBog/+bvmIEEGXi0p1w=="
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="enhanced-dashboard-styles.css" />
+
+    <style>
+      /* Critical above-the-fold CSS */
+      :root {
+        /* Light Theme Colors */
+        --primary-color: #667eea;
+        --primary-light: #8fa4f3;
+        --primary-dark: #4c63d2;
+        --secondary-color: #764ba2;
+        --accent-color: #00a86b;
+        --warning-color: #f39c12;
+        --danger-color: #e74c3c;
+        --success-color: #27ae60;
+
+        /* Neutral Colors */
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8f9fa;
+        --bg-tertiary: #e9ecef;
+        --text-primary: #2c3e50;
+        --text-secondary: #6c757d;
+        --text-muted: #adb5bd;
+        --border-color: #dee2e6;
+        --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.08);
+        --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.12);
+        --shadow-heavy: 0 8px 32px rgba(0, 0, 0, 0.24);
+
+        /* Arabic Font Stack */
+        --font-arabic: "Cairo", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        --font-latin: "Inter", "Segoe UI", system-ui, sans-serif;
+
+        /* Spacing */
+        --spacing-xs: 0.25rem;
+        --spacing-sm: 0.5rem;
+        --spacing-md: 1rem;
+        --spacing-lg: 1.5rem;
+        --spacing-xl: 2rem;
+        --spacing-xxl: 3rem;
+
+        /* Border Radius */
+        --radius-sm: 4px;
+        --radius-md: 8px;
+        --radius-lg: 12px;
+        --radius-xl: 16px;
+        --radius-pill: 50px;
+
+        /* Transitions */
+        --transition-fast: 0.15s ease;
+        --transition-normal: 0.3s ease;
+        --transition-slow: 0.5s ease;
+      }
+
+      /* Dark Theme */
+      [data-theme="dark"] {
+        --bg-primary: #1a1a1a;
+        --bg-secondary: #2d2d2d;
+        --bg-tertiary: #404040;
+        --text-primary: #ffffff;
+        --text-secondary: #cccccc;
+        --text-muted: #999999;
+        --border-color: #444444;
+        --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.3);
+        --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.4);
+        --shadow-heavy: 0 8px 32px rgba(0, 0, 0, 0.6);
+      }
+
+      /* RTL Support */
+      [dir="rtl"] {
+        font-family: var(--font-arabic);
+      }
+
+      [dir="ltr"] {
+        font-family: var(--font-latin);
+      }
+
+      /* Reset and Base Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+
+      body {
+        font-family: var(--font-latin);
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--secondary-color) 100%
+        );
+        min-height: 100vh;
+        color: var(--text-primary);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* Loading Screen */
+      .loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--bg-primary);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity var(--transition-slow);
+      }
+
+      .loading-screen.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid var(--bg-tertiary);
+        border-top: 4px solid var(--primary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Header */
+      .header {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding: var(--spacing-md) var(--spacing-xl);
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: var(--shadow-light);
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+      }
+
+      .nav-menu {
+        display: flex;
+        gap: var(--spacing-md);
+        align-items: center;
+      }
+
+      .nav-btn {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        padding: var(--spacing-sm) var(--spacing-md);
+        border-radius: var(--radius-md);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all var(--transition-normal);
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+        cursor: pointer;
+      }
+
+      .nav-btn:hover,
+      .nav-btn:focus {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        outline: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Language Toggle */
+      .language-toggle {
+        display: flex;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: var(--radius-pill);
+        padding: var(--spacing-xs);
+      }
+
+      .language-toggle button {
+        background: transparent;
+        color: white;
+        border: none;
+        padding: var(--spacing-xs) var(--spacing-sm);
+        border-radius: var(--radius-pill);
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        font-size: 0.875rem;
+      }
+
+      .language-toggle button.active {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      /* Theme Toggle */
+      .theme-toggle {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        padding: var(--spacing-sm);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all var(--transition-normal);
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .theme-toggle:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(180deg);
+      }
+
+      /* Main Container */
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: var(--spacing-xl) var(--spacing-md);
+      }
+
+      /* Stats Grid */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-xxl);
+      }
+
+      .stat-card {
+        background: var(--bg-primary);
+        padding: var(--spacing-xl);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-medium);
+        text-align: center;
+        min-height: 160px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        transition: all var(--transition-normal);
+        border: 1px solid var(--border-color);
+      }
+
+      .stat-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          var(--primary-color),
+          var(--accent-color)
+        );
+      }
+
+      .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-heavy);
+      }
+
+      .stat-icon {
+        font-size: 2rem;
+        margin-bottom: var(--spacing-md);
+        color: var(--primary-color);
+      }
+
+      .stat-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: var(--spacing-sm);
+      }
+
+      .stat-label {
+        color: var(--text-secondary);
+        font-weight: 500;
+        margin-bottom: var(--spacing-sm);
+      }
+
+      .stat-change {
+        font-size: 0.875rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+      }
+
+      .stat-change.positive {
+        color: var(--success-color);
+      }
+
+      .stat-change.negative {
+        color: var(--danger-color);
+      }
+
+      /* Sections */
+      .section {
+        background: var(--bg-primary);
+        border-radius: var(--radius-xl);
+        padding: var(--spacing-xl);
+        margin-bottom: var(--spacing-xl);
+        box-shadow: var(--shadow-medium);
+        border: 1px solid var(--border-color);
+        transition: all var(--transition-normal);
+      }
+
+      .section:hover {
+        box-shadow: var(--shadow-heavy);
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-lg);
+        padding-bottom: var(--spacing-md);
+        border-bottom: 2px solid var(--bg-secondary);
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+      }
+
+      .section-actions {
+        display: flex;
+        gap: var(--spacing-sm);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .header {
+          padding: var(--spacing-md);
+          flex-direction: column;
+          gap: var(--spacing-md);
+        }
+
+        .nav-menu {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .container {
+          padding: var(--spacing-md);
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: var(--spacing-md);
+        }
+
+        .stat-card {
+          padding: var(--spacing-lg);
+          min-height: 120px;
+        }
+
+        .stat-value {
+          font-size: 2rem;
+        }
+
+        .section {
+          padding: var(--spacing-lg);
+        }
+
+        .section-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: var(--spacing-md);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .stat-value {
+          font-size: 1.75rem;
+        }
+      }
+
+      /* Accessibility */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
+      /* Focus styles */
+      :focus-visible {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+      }
+
+      /* High contrast mode */
+      @media (prefers-contrast: high) {
+        :root {
+          --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.5);
+          --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.6);
+          --shadow-heavy: 0 8px 32px rgba(0, 0, 0, 0.8);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Loading Screen -->
+    <div
+      class="loading-screen"
+      id="loadingScreen"
+      aria-label="Loading dashboard"
+    >
+      <div class="spinner" aria-hidden="true"></div>
+      <p class="loading-text">Loading BrainSAIT Dashboard...</p>
+    </div>
+
+    <!-- Skip Link for Accessibility -->
+    <a href="#main-content" class="sr-only" tabindex="1"
+      >Skip to main content</a
+    >
+
+    <!-- Header -->
+    <header class="header" role="banner">
+      <div class="logo">
+        <i class="fas fa-hospital-alt" aria-hidden="true"></i>
+        <span>BrainSAIT Digital Insurance Platform</span>
+      </div>
+
+      <nav class="nav-menu" role="navigation" aria-label="Main navigation">
+        <a href="https://brainsait.com" class="nav-btn" aria-label="Home page">
+          <i class="fas fa-home" aria-hidden="true"></i>
+          <span data-translate="nav.home">Home</span>
+        </a>
+        <a
+          href="https://claims.brainsait.com"
+          class="nav-btn"
+          aria-label="Claims management"
+        >
+          <i class="fas fa-file-medical" aria-hidden="true"></i>
+          <span data-translate="nav.claims">Claims</span>
+        </a>
+        <a
+          href="https://health.brainsait.com"
+          class="nav-btn"
+          aria-label="System health"
+        >
+          <i class="fas fa-heartbeat" aria-hidden="true"></i>
+          <span data-translate="nav.health">Health</span>
+        </a>
+
+        <!-- Language Toggle -->
+        <div
+          class="language-toggle"
+          role="group"
+          aria-label="Language selection"
+        >
+          <button
+            onclick="setLanguage('en')"
+            class="active"
+            aria-label="Switch to English"
+          >
+            EN
+          </button>
+          <button onclick="setLanguage('ar')" aria-label="Switch to Arabic">
+            العربية
+          </button>
+        </div>
+
+        <!-- Theme Toggle -->
+        <button
+          class="theme-toggle"
+          onclick="toggleTheme()"
+          aria-label="Toggle dark mode"
+        >
+          <i class="fas fa-moon" id="themeIcon" aria-hidden="true"></i>
+        </button>
+
+        <span class="version-text">v1.2.0</span>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="container" role="main">
+      <!-- Stats Section -->
+      <section class="stats-grid" aria-label="Dashboard statistics">
+        <div
+          class="stat-card"
+          role="region"
+          aria-labelledby="total-claims-label"
+        >
+          <div class="stat-icon">
+            <i class="fas fa-file-medical-alt" aria-hidden="true"></i>
+          </div>
+          <div class="stat-value" id="totalClaims" aria-live="polite">-</div>
+          <div
+            class="stat-label"
+            id="total-claims-label"
+            data-translate="stats.totalClaims"
+          >
+            Total Claims
+          </div>
+          <div class="stat-change positive" id="claimsChange">
+            <i class="fas fa-arrow-up" aria-hidden="true"></i>
+            <span>+12% from last month</span>
+          </div>
+        </div>
+
+        <div
+          class="stat-card"
+          role="region"
+          aria-labelledby="active-patients-label"
+        >
+          <div class="stat-icon">
+            <i class="fas fa-users" aria-hidden="true"></i>
+          </div>
+          <div class="stat-value" id="activePatients" aria-live="polite">-</div>
+          <div
+            class="stat-label"
+            id="active-patients-label"
+            data-translate="stats.activePatients"
+          >
+            Active Patients
+          </div>
+          <div class="stat-change positive" id="patientsChange">
+            <i class="fas fa-arrow-up" aria-hidden="true"></i>
+            <span>+8% from last month</span>
+          </div>
+        </div>
+
+        <div
+          class="stat-card"
+          role="region"
+          aria-labelledby="auto-approved-label"
+        >
+          <div class="stat-icon">
+            <i class="fas fa-robot" aria-hidden="true"></i>
+          </div>
+          <div class="stat-value" id="autoApproved" aria-live="polite">-</div>
+          <div
+            class="stat-label"
+            id="auto-approved-label"
+            data-translate="stats.autoApproved"
+          >
+            AI Auto-Approved
+          </div>
+          <div class="stat-change positive" id="autoApprovedChange">
+            <i class="fas fa-arrow-up" aria-hidden="true"></i>
+            <span>+15% accuracy</span>
+          </div>
+        </div>
+
+        <div
+          class="stat-card"
+          role="region"
+          aria-labelledby="processing-time-label"
+        >
+          <div class="stat-icon">
+            <i class="fas fa-clock" aria-hidden="true"></i>
+          </div>
+          <div class="stat-value" id="avgProcessingTime" aria-live="polite">
+            -
+          </div>
+          <div
+            class="stat-label"
+            id="processing-time-label"
+            data-translate="stats.processingTime"
+          >
+            Avg Processing Time
+          </div>
+          <div class="stat-change negative" id="processingTimeChange">
+            <i class="fas fa-arrow-down" aria-hidden="true"></i>
+            <span>-23% faster</span>
+          </div>
+        </div>
+
+        <div
+          class="stat-card"
+          role="region"
+          aria-labelledby="nphies-status-label"
+        >
+          <div class="stat-icon">
+            <i class="fas fa-shield-alt" aria-hidden="true"></i>
+          </div>
+          <div class="stat-value" id="nphiesCompliance" aria-live="polite">
+            99.8%
+          </div>
+          <div
+            class="stat-label"
+            id="nphies-status-label"
+            data-translate="stats.nphiesCompliance"
+          >
+            NPHIES Compliance
+          </div>
+          <div class="stat-change positive" id="complianceChange">
+            <i class="fas fa-check-circle" aria-hidden="true"></i>
+            <span>Certified</span>
+          </div>
+        </div>
+
+        <div class="stat-card" role="region" aria-labelledby="revenue-label">
+          <div class="stat-icon">
+            <i class="fas fa-chart-line" aria-hidden="true"></i>
+          </div>
+          <div class="stat-value" id="monthlyRevenue" aria-live="polite">-</div>
+          <div
+            class="stat-label"
+            id="revenue-label"
+            data-translate="stats.monthlyRevenue"
+          >
+            Monthly Revenue (SAR)
+          </div>
+          <div class="stat-change positive" id="revenueChange">
+            <i class="fas fa-arrow-up" aria-hidden="true"></i>
+            <span>+28% from last month</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Analytics Charts Section -->
+      <section class="section" aria-labelledby="analytics-title">
+        <div class="section-header">
+          <h2 class="section-title" id="analytics-title">
+            <i class="fas fa-chart-bar" aria-hidden="true"></i>
+            <span data-translate="sections.analytics">Analytics Overview</span>
+          </h2>
+          <div class="section-actions">
+            <button
+              class="nav-btn"
+              onclick="exportAnalytics()"
+              aria-label="Export analytics data"
+            >
+              <i class="fas fa-download" aria-hidden="true"></i>
+              <span data-translate="actions.export">Export</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="chart-container">
+            <h3 class="chart-title">Claims Processing Trend</h3>
+            <canvas
+              id="claimsChart"
+              width="400"
+              height="200"
+              aria-label="Claims processing trend chart"
+            ></canvas>
+          </div>
+          <div class="chart-container">
+            <h3 class="chart-title">Revenue Distribution</h3>
+            <canvas
+              id="revenueChart"
+              width="400"
+              height="200"
+              aria-label="Revenue distribution chart"
+            ></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- NPHIES Integration Status -->
+      <section class="section" aria-labelledby="nphies-title">
+        <div class="section-header">
+          <h2 class="section-title" id="nphies-title">
+            <i class="fas fa-network-wired" aria-hidden="true"></i>
+            <span data-translate="sections.nphies"
+              >NPHIES Integration Status</span
+            >
+          </h2>
+          <div class="section-actions">
+            <button
+              class="nav-btn"
+              onclick="checkNPHIESStatus()"
+              aria-label="Refresh NPHIES status"
+            >
+              <i class="fas fa-sync-alt" aria-hidden="true"></i>
+              <span data-translate="actions.refresh">Refresh</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="nphiesStatusGrid" class="nphies-status-grid">
+          <!-- NPHIES status cards will be populated here -->
+        </div>
+      </section>
+
+      <!-- Healthcare Providers Section -->
+      <section class="section" aria-labelledby="providers-title">
+        <div class="section-header">
+          <h2 class="section-title" id="providers-title">
+            <i class="fas fa-hospital" aria-hidden="true"></i>
+            <span data-translate="sections.providers"
+              >Healthcare Providers</span
+            >
+          </h2>
+          <div class="section-actions">
+            <button
+              class="nav-btn"
+              onclick="addProvider()"
+              aria-label="Add new provider"
+            >
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <span data-translate="actions.add">Add Provider</span>
+            </button>
+            <button
+              class="nav-btn"
+              onclick="exportProviders()"
+              aria-label="Export providers data"
+            >
+              <i class="fas fa-download" aria-hidden="true"></i>
+              <span data-translate="actions.export">Export</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="tenantsLoading" class="loading" aria-live="polite">
+          <i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
+          <span data-translate="loading.providers"
+            >Loading healthcare providers...</span
+          >
+        </div>
+        <div
+          id="tenantsError"
+          class="error d-none"
+          role="alert"
+          aria-live="assertive"
+        ></div>
+
+        <div id="tenantsTableContainer" class="d-none">
+          <div class="search-filter-container">
+            <input
+              type="text"
+              id="providersSearch"
+              class="search-input"
+              placeholder="Search providers..."
+              aria-label="Search healthcare providers"
+            />
+            <select
+              id="providersFilter"
+              class="filter-select"
+              aria-label="Filter providers by status"
+            >
+              <option value="">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="pending">Pending</option>
+            </select>
+          </div>
+
+          <div class="table-container">
+            <table
+              class="table"
+              id="tenantsTable"
+              role="table"
+              aria-labelledby="providers-title"
+            >
+              <thead>
+                <tr>
+                  <th scope="col" data-translate="table.providerName">
+                    Provider Name
+                  </th>
+                  <th scope="col" data-translate="table.plan">Plan</th>
+                  <th scope="col" data-translate="table.status">Status</th>
+                  <th scope="col" data-translate="table.claimsProcessed">
+                    Claims Processed
+                  </th>
+                  <th scope="col" data-translate="table.lastActivity">
+                    Last Activity
+                  </th>
+                  <th scope="col" data-translate="table.actions">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="tenantsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Claims Section -->
+      <section class="section" aria-labelledby="claims-title">
+        <div class="section-header">
+          <h2 class="section-title" id="claims-title">
+            <i class="fas fa-file-medical" aria-hidden="true"></i>
+            <span data-translate="sections.claims">Recent Claims</span>
+          </h2>
+          <div class="section-actions">
+            <button
+              class="nav-btn"
+              onclick="newClaim()"
+              aria-label="Create new claim"
+            >
+              <i class="fas fa-plus" aria-hidden="true"></i>
+              <span data-translate="actions.newClaim">New Claim</span>
+            </button>
+            <button
+              class="nav-btn"
+              onclick="exportClaims()"
+              aria-label="Export claims data"
+            >
+              <i class="fas fa-download" aria-hidden="true"></i>
+              <span data-translate="actions.export">Export</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="claimsLoading" class="loading" aria-live="polite">
+          <i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
+          <span data-translate="loading.claims">Loading recent claims...</span>
+        </div>
+        <div
+          id="claimsError"
+          class="error d-none"
+          role="alert"
+          aria-live="assertive"
+        ></div>
+
+        <div id="claimsTableContainer" class="d-none">
+          <div class="search-filter-container">
+            <input
+              type="text"
+              id="claimsSearch"
+              class="search-input"
+              placeholder="Search claims..."
+              aria-label="Search claims"
+            />
+            <select
+              id="claimsFilter"
+              class="filter-select"
+              aria-label="Filter claims by status"
+            >
+              <option value="">All Status</option>
+              <option value="approved">Approved</option>
+              <option value="pending">Pending</option>
+              <option value="denied">Denied</option>
+              <option value="processing">Processing</option>
+            </select>
+          </div>
+
+          <div class="table-container">
+            <table
+              class="table"
+              id="claimsTable"
+              role="table"
+              aria-labelledby="claims-title"
+            >
+              <thead>
+                <tr>
+                  <th scope="col" data-translate="table.claimId">Claim ID</th>
+                  <th scope="col" data-translate="table.patientName">
+                    Patient Name
+                  </th>
+                  <th scope="col" data-translate="table.amount">
+                    Amount (SAR)
+                  </th>
+                  <th scope="col" data-translate="table.status">Status</th>
+                  <th scope="col" data-translate="table.submitted">
+                    Submitted
+                  </th>
+                  <th scope="col" data-translate="table.actions">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="claimsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Notification Toast Container -->
+    <div
+      id="toastContainer"
+      class="toast-container"
+      aria-live="polite"
+      aria-atomic="true"
+    ></div>
+
+    <!-- Scripts -->
+    <script src="enhanced-dashboard.js"></script>
+
+    <!-- Inline critical JavaScript -->
+    <script>
+      // Critical initialization
+      document.addEventListener("DOMContentLoaded", function () {
+        // Hide loading screen
+        setTimeout(() => {
+          document.getElementById("loadingScreen").classList.add("hidden");
+        }, 1000);
+
+        // Initialize dashboard
+        if (typeof initializeDashboard === "function") {
+          initializeDashboard();
+        }
+      });
+
+      // Basic theme toggle functionality
+      function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+
+        html.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+
+        // Update icon
+        const icon = document.getElementById("themeIcon");
+        icon.className = newTheme === "dark" ? "fas fa-sun" : "fas fa-moon";
+      }
+
+      // Basic language toggle functionality
+      function setLanguage(lang) {
+        const html = document.documentElement;
+        html.setAttribute("lang", lang);
+        html.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
+        localStorage.setItem("language", lang);
+
+        // Update active button
+        document.querySelectorAll(".language-toggle button").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+        event.target.classList.add("active");
+
+        // Load translations if available
+        if (typeof loadTranslations === "function") {
+          loadTranslations(lang);
+        }
+      }
+
+      // Load saved preferences
+      (function () {
+        const savedTheme = localStorage.getItem("theme") || "light";
+        const savedLang = localStorage.getItem("language") || "en";
+
+        document.documentElement.setAttribute("data-theme", savedTheme);
+        document.documentElement.setAttribute("lang", savedLang);
+        document.documentElement.setAttribute(
+          "dir",
+          savedLang === "ar" ? "rtl" : "ltr"
+        );
+
+        // Update theme icon
+        const icon = document.getElementById("themeIcon");
+        if (icon) {
+          icon.className = savedTheme === "dark" ? "fas fa-sun" : "fas fa-moon";
+        }
+      })();
+    </script>
+  </body>
+</html>

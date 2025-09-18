@@ -20,19 +20,66 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
-      
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: Install dependencies
-        run: npm ci
-      
-      - name: Run tests
-        run: npm test
-      
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install claims AI dependencies
+        run: |
+          cd services/claims-ai-engine
+          poetry install --no-interaction --no-root
+
+      - name: Run unit tests
+        run: pnpm test
+
       - name: Run linting
-        run: npm run lint
-      
+        run: pnpm lint
+
       - name: Type check
-        run: npm run type-check
+        run: pnpm type-check
+
+      - name: Install Playwright browsers
+        run: pnpm --filter @nphies-pro/web exec playwright install --with-deps
+
+      - name: Prepare database
+        working-directory: services/platform-gateway
+        env:
+          DATABASE_URL: "file:./prisma/dev.db"
+        run: |
+          pnpm prisma:migrate
+          pnpm prisma:seed
+
+      - name: Start services
+        run: pnpm dev:services &
+
+      - name: Wait for services
+        run: npx wait-on http://127.0.0.1:3000 http://127.0.0.1:3001/health
+
+      - name: Run Playwright smoke tests
+        env:
+          E2E_BASE_URL: http://127.0.0.1:3000
+        run: pnpm --filter @nphies-pro/web test:e2e -- --project=chromium --reporter=list
+
+      - name: Stop services
+        if: always()
+        run: |
+          pkill -f "pnpm dev:services" || true
 
   build-and-deploy:
     needs: test

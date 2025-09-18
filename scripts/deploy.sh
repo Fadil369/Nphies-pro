@@ -108,7 +108,7 @@ build_and_push_images() {
     docker build -t $PROJECT_NAME:latest .
     
     # Build services
-    docker build -t $PROJECT_NAME-tenant-manager:latest ./services/tenant-manager
+    docker build -t $PROJECT_NAME-platform-gateway:latest ./services/platform-gateway
     docker build -t $PROJECT_NAME-claims-ai:latest ./services/claims-ai-engine
     
     log_info "Docker images built ✅"

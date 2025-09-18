@@ -1,0 +1,160 @@
+{
+  "dashboard": {
+    "title": "منصة براين سايت للتأمين الرقمي",
+    "subtitle": "رقمنة متكاملة لقطاع الرعاية الصحية في المملكة العربية السعودية",
+    "kpis": {
+      "rejectionAmount": "مبلغ الرفض (ريال)",
+      "rejectionCount": "عدد الرفض",
+      "fpar": "نسبة القبول من أول محاولة"
+    },
+    "cta": {
+      "submit": {
+        "title": "تقديم مطالبة جديدة",
+        "description": "معالجة المطالبات بالاعتماد على التحقق الذكي",
+        "action": "بدء المطالبة"
+      },
+      "integration": {
+        "title": "تكامل نفيس",
+        "description": "تحقق فوري للأهلية ومزامنة البيانات",
+        "action": "تحقق من الحالة"
+      },
+      "analytics": {
+        "title": "لوحة التحليلات",
+        "description": "رؤى متقدمة وتقارير التزام",
+        "action": "عرض التقارير"
+      },
+      "stats": {
+        "pending": "مطالبات قيد المعالجة",
+        "verified": "مطالبات معتمدة",
+        "rejected": "مطالبات مرفوضة"
+      },
+      "disabled": "يتطلب صلاحية claims.write"
+    }
+  },
+  "claims": {
+    "title": "أحدث المطالبات",
+    "empty": "لا توجد مطالبات مطابقة",
+    "export": "تصدير CSV",
+    "searchPlaceholder": "ابحث بالاسم أو رقم المطالبة",
+    "tenantFilter": "جميع الجهات",
+    "dateFrom": "من",
+    "dateTo": "إلى",
+    "pagination": "الصفحة {{current}} من {{total}}",
+    "filters": {
+      "all": "الكل",
+      "approved": "معتمدة",
+      "pending": "قيد المعالجة",
+      "rejected": "مرفوضة"
+    },
+    "timelineButton": "عرض السجل",
+    "timelineTitle": "سجل المطالبة",
+    "timelineEmpty": "لا يوجد نشاط للمطالبة",
+    "timelineAdd": {
+      "placeholder": "أضف ملاحظة للسجل",
+      "submit": "إضافة ملاحظة"
+    },
+    "timelineTypes": {
+      "created": "تم الإنشاء",
+      "status": "تحديث الحالة",
+      "ai": "قرار الذكاء الاصطناعي",
+      "note": "ملاحظة"
+    },
+    "form": {
+      "title": "تقديم مطالبة جديدة",
+      "close": "إغلاق",
+      "tenant": "الجهة",
+      "selectTenant": "اختر الجهة",
+      "patientName": "اسم المريض",
+      "patientId": "رقم المريض",
+      "nationalId": "الهوية الوطنية",
+      "amount": "المبلغ (ريال)",
+      "diagnosis": "التشخيص",
+      "cancel": "إلغاء",
+      "submit": "تقديم المطالبة",
+      "submitting": "جاري التقديم...",
+      "errors": {
+        "tenant": "يرجى اختيار الجهة",
+        "patientName": "أدخل اسم المريض",
+        "patientId": "أدخل رقم المريض",
+        "nationalId": "أدخل الهوية الوطنية",
+        "amount": "أدخل مبلغاً صحيحاً",
+        "diagnosis": "أدخل التشخيص"
+      }
+    }
+  },
+  "charts": {
+    "claimsTrend": "اتجاهات معالجة المطالبات",
+    "recentActivity": "آخر الأنشطة",
+    "empty": "لا توجد بيانات متاحة حتى الآن"
+  },
+  "analytics": {
+    "trendTitle": "اتجاهات الحالات",
+    "leaderboardTitle": "أفضل الجهات",
+    "leaderboardEmpty": "لا تتوفر بيانات للجهات",
+    "filters": {
+      "rangeLabel": "الفترة",
+      "planLabel": "الباقة",
+      "range": {
+        "3": "آخر ٣ أشهر",
+        "6": "آخر ٦ أشهر",
+        "12": "آخر ١٢ شهر"
+      }
+    },
+    "insightsTitle": "تحليلات ذكية",
+    "insightsEmpty": "لا توجد توصيات حالياً"
+  },
+  "stats": {
+    "totalClaims": "إجمالي المطالبات",
+    "activePatients": "المرضى النشطون",
+    "autoApproved": "مطالبات معتمدة تلقائيًا",
+    "processingTime": "مدة المعالجة",
+    "change": "مقارنة بالشهر الماضي"
+  },
+  "actions": {
+    "viewActivity": "عرض جميع الأنشطة"
+  },
+  "tenants": {
+    "title": "أداء الجهات الطبية",
+    "searchPlaceholder": "ابحث عن جهة أو باقة",
+    "empty": "لا توجد جهات مطابقة للمعايير الحالية",
+    "noClaims": "لا توجد مطالبات مسجلة لهذه الجهة",
+    "close": "إغلاق",
+    "filterAll": "جميع الباقات",
+    "planOptions": {
+      "all": "جميع الباقات",
+      "starter": "الباقة الأساسية",
+      "professional": "الباقة المهنية",
+      "enterprise": "باقة المؤسسات"
+    },
+    "metrics": {
+      "total": "إجمالي المطالبات",
+      "approval": "نسبة الاعتماد",
+      "processing": "متوسط زمن المعالجة"
+    }
+  },
+  "language": {
+    "toggleToArabic": "العربية",
+    "toggleToEnglish": "English"
+  },
+  "tenantProfile": {
+    "plan": "الباقة: {{plan}}",
+    "status": "الحالة: {{status}}",
+    "lastActivity": "آخر نشاط {{value}}",
+    "back": "العودة للوحة التحكم",
+    "metrics": {
+      "total": "إجمالي المطالبات",
+      "approved": "مطالبات معتمدة",
+      "pending": "مطالبات قيد المعالجة",
+      "rejected": "مطالبات مرفوضة",
+      "approval": "نسبة الاعتماد",
+      "processing": "متوسط زمن المعالجة"
+    },
+    "trendTitle": "الاتجاه الشهري",
+    "recentClaims": "أحدث المطالبات",
+    "timeline": {
+      "title": "سجل المطالبة",
+      "empty": "لا يوجد نشاط للمطالبة"
+    },
+    "activityTitle": "آخر الأنشطة"
+  }
+}

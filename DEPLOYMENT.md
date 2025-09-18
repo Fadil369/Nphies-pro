@@ -144,7 +144,7 @@ After deployment, access monitoring at:
 ### Health Check Endpoints
 
 - Main app: `http://YOUR_INSTANCE_IP/health`
-- Tenant Manager: `http://YOUR_INSTANCE_IP/api/health`
+- Platform Gateway: `http://YOUR_INSTANCE_IP/api/health`
 - AI Engine: `http://YOUR_INSTANCE_IP/ai/health`
 
 ## 🔐 Security Features

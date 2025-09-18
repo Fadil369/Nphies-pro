@@ -39,7 +39,7 @@ The **BrainSAIT Digital Insurance Platform** is a next-generation SaaS solution 
 │  └── Tenant Isolation      └── Request/Response Logging       │
 ├─────────────────────────────────────────────────────────────────┤
 │  🧠 Core Business Services (Microservices Architecture)        │
-│  ├── Tenant Manager (TS)   ├── Claims AI Engine (Python)      │
+│  ├── Platform Gateway (TS) ├── Claims AI Engine (Python)      │
 │  ├── Billing Service (TS)  ├── FHIR Data Layer (Python/TS)    │
 │  ├── Auth Service (TS)     ├── Notifications (TS)             │
 │  └── Analytics (Python)    └── Compliance Monitor (TS)        │
@@ -105,6 +105,23 @@ The **BrainSAIT Digital Insurance Platform** is a next-generation SaaS solution 
 ├── Business Intelligence → Strategic insights
 └── Real-time Streaming → Live monitoring
 ```
+
+## 📄 Specifications & Compliance Playbooks
+- Authoritative requirements now live under `docs/specs/`
+- Start with `docs/specs/README.md` for the BrainSAIT spec index and navigation
+- `docs/specs/000-claims-analytics-platform/spec.md` captures scope, KPIs, and compliance guardrails
+- `docs/specs/000-claims-analytics-platform/plan.md` details the phased technical rollout
+- `docs/specs/000-claims-analytics-platform/data-model.md` maps entities to FHIR resources and Saudi NPHIES rules
+
+## 📈 Monitoring & Alerts
+- Prometheus scrapes `/metrics` from the Platform Gateway and Claims AI engine (see `monitoring/prometheus.yml`)
+- Sample alert rules for availability/latency live in `monitoring/alert_rules.yml`
+- Quick start and customization guidance: `docs/reference/monitoring.md`
+
+## 🧑‍🤝‍🧑 Role Matrix (local mock)
+- Default mock role is `provider_biller`; switch via the floating selector or `POST /api/auth/mock-role` with `{"role": "claim_adjuster"}`
+- Supported roles: provider_biller, claim_adjuster, analytics_viewer, auditor, insurer_analyst, doctor, nurse, admin
+- UI automatically hides mutation controls when the current role lacks `claims.write`
 
 ## 🚀 Technology Stack
 
@@ -178,7 +195,58 @@ The **BrainSAIT Digital Insurance Platform** is a next-generation SaaS solution 
 - **API Pro**: +400 SAR/month - Unlimited API access
 - **Multi-Region**: +600 SAR/month - Global data replication
 
-## 🎯 Target Market & Go-to-Market Strategy
+## 🤖 AI-Powered Healthcare Assistant
+
+### CopilotKit + Pydantic AI Integration
+
+The NPHIES platform features a comprehensive AI assistant powered by the integration of **CopilotKit** (frontend) and **Pydantic AI** (backend), providing:
+
+#### 🧠 **Intelligent Claims Processing**
+- **Real-time Analysis**: AI-powered claims pattern recognition and insights
+- **Automated Validation**: NPHIES compliance checking with Saudi healthcare standards
+- **Fraud Detection**: Advanced ML models for risk assessment and fraud prevention
+- **Predictive Analytics**: Forecast claim trends and processing bottlenecks
+
+#### 🗣️ **Natural Language Interface**
+- **Bilingual Support**: Arabic and English conversational AI
+- **Voice Commands**: "تحليل المطالبات" or "Analyze claims patterns"
+- **Contextual Understanding**: Healthcare domain-specific knowledge
+- **Smart Suggestions**: Proactive recommendations based on data patterns
+
+#### 🛡️ **Saudi Healthcare Compliance**
+- **NPHIES v2.0 Standards**: Automated compliance validation
+- **PDPL Compliance**: Saudi data protection law adherence
+- **MOH Guidelines**: Ministry of Health regulation checking
+- **CCHI Requirements**: Insurance regulatory compliance
+
+#### 📊 **Advanced Analytics & Reporting**
+- **Comprehensive Reports**: Financial, operational, and compliance analytics
+- **Real-time Dashboards**: Live KPI monitoring and alerts
+- **Custom Insights**: Tailored recommendations for healthcare providers
+- **Performance Optimization**: Workflow efficiency improvements
+
+### AI Assistant Capabilities
+
+```typescript
+// Available AI Actions
+- analyzeClaims()          // Comprehensive claims analysis
+- checkNphiesCompliance()  // Saudi compliance validation  
+- detectFraud()           // AI-powered fraud detection
+- generateReport()        // Healthcare analytics reports
+- optimizeWorkflow()      // Process improvement suggestions
+- predictTrends()         // Forecasting and planning
+```
+
+### Quick AI Demo
+1. Open the NPHIES dashboard
+2. Press `⌘J` to activate the AI assistant
+3. Try these commands:
+   - "تحليل جميع المطالبات" (Analyze all claims)
+   - "Check NPHIES compliance for pending claims"
+   - "Generate fraud detection report"
+   - "What are the top claim rejection reasons?"
+
+**📚 Detailed Documentation**: See [AI Integration Guide](docs/AI_INTEGRATION.md)
 
 ### Primary Segments
 1. **Private Healthcare Providers** (60% market share target)
@@ -317,10 +385,20 @@ Phase 3: Expansion (Q4 2025+)
    npm run dev:web
    ```
 
+   Copy the gateway environment template and adjust if needed (defaults to SQLite dev.db):
+   ```bash
+   cp services/platform-gateway/.env.example services/platform-gateway/.env
+   ```
+
+   Optional: run UI smoke tests (requires the app and gateway running in the background):
+   ```bash
+   pnpm --filter @nphies-pro/web test:e2e
+   ```
+
 5. **Health Checks**
    ```bash
    # Verify services are running
-   curl http://localhost:3001/health  # Tenant Manager
+   curl http://localhost:3001/health  # Platform Gateway
    curl http://localhost:8000/health  # Claims AI Engine
    ```
 
@@ -337,7 +415,7 @@ nphies-pro/
 │   ├── auth/                    # Authentication utilities
 │   └── fhir-utils/              # FHIR R4 utilities
 ├── 🔧 services/                 # Backend microservices
-│   ├── tenant-manager/          # Multi-tenant management (TS)
+│   ├── platform-gateway/        # Unified REST API gateway (TS)
 │   ├── claims-ai-engine/        # AI processing engine (Python)
 │   ├── fhir-layer/              # FHIR data processing (Python)
 │   ├── billing/                 # Billing and payments (TS)

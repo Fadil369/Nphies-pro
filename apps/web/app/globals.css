@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --midnight: #1a365d;
+  --medical: #2b6cb8;
+  --teal: #0ea5e9;
+  --orange: #ea580c;
+  --gray: #64748b;
+}
+
+html,
+body,
+#__next {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #000;
+  color: #fff;
+  font-family: Inter, "IBM Plex Sans Arabic", system-ui, sans-serif;
+}
+
+.glass {
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+}
+
+button.glass {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button.glass:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(14, 165, 233, 0.15);
+}

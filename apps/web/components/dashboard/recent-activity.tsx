@@ -1,77 +1,58 @@
 'use client';
 
-import { CheckCircle, Clock, AlertCircle, XCircle } from 'lucide-react';
+type Activity = {
+  id: string;
+  message: string;
+  time: string;
+  status: 'approved' | 'pending' | 'flagged' | 'rejected';
+};
 
-const activities = [
-  {
-    id: 1,
-    type: 'approved',
-    message: 'Claim #12345 auto-approved',
-    time: '2 minutes ago',
-    icon: CheckCircle,
-    iconColor: 'text-green-500',
-  },
-  {
-    id: 2,
-    type: 'pending',
-    message: 'Claim #12346 pending review',
-    time: '5 minutes ago',
-    icon: Clock,
-    iconColor: 'text-yellow-500',
-  },
-  {
-    id: 3,
-    type: 'flagged',
-    message: 'Claim #12347 flagged for fraud',
-    time: '10 minutes ago',
-    icon: AlertCircle,
-    iconColor: 'text-red-500',
-  },
-  {
-    id: 4,
-    type: 'approved',
-    message: 'Claim #12348 auto-approved',
-    time: '15 minutes ago',
-    icon: CheckCircle,
-    iconColor: 'text-green-500',
-  },
-  {
-    id: 5,
-    type: 'rejected',
-    message: 'Claim #12349 rejected',
-    time: '20 minutes ago',
-    icon: XCircle,
-    iconColor: 'text-red-500',
-  },
-];
+const statusColor: Record<Activity['status'], string> = {
+  approved: 'text-emerald-400',
+  pending: 'text-amber-300',
+  flagged: 'text-rose-400',
+  rejected: 'text-rose-400',
+};
 
-export function RecentActivity() {
+export function RecentActivity({
+  activities,
+  title,
+  viewAllLabel,
+  emptyLabel,
+}: {
+  activities: Activity[];
+  title: string;
+  viewAllLabel: string;
+  emptyLabel: string;
+}) {
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-        Recent Activity
-      </h3>
-      <div className="space-y-4">
-        {activities.map((activity) => {
-          const Icon = activity.icon;
-          return (
-            <div key={activity.id} className="flex items-center space-x-3">
-              <div className={`p-2 rounded-full bg-gray-50`}>
-                <Icon className={`h-4 w-4 ${activity.iconColor}`} />
+    <div>
+      <h3 className="text-lg font-semibold text-white">{title}</h3>
+      <div className="mt-4 space-y-4">
+        {activities.length === 0 ? (
+          <div className="rounded-xl border border-white/5 bg-white/5 p-4 text-sm text-slate-200">
+            {emptyLabel}
+          </div>
+        ) : (
+          activities.map((activity) => (
+            <div
+              key={activity.id}
+              className="flex items-center space-x-3 rounded-xl border border-white/5 bg-white/5 p-3 backdrop-blur"
+            >
+              <div className={`rounded-full bg-white/10 p-2 ${statusColor[activity.status]}`}>
+                ●
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900">
-                  {activity.message}
-                </p>
-                <p className="text-sm text-gray-500">{activity.time}</p>
+              <div className="flex-1">
+                <p className="text-sm text-white">{activity.message}</p>
+                <p className="text-xs text-slate-300">{activity.time}</p>
               </div>
             </div>
-          );
-        })}
+          ))
+        )}
       </div>
       <div className="mt-6">
-        <button className="w-full text-center text-sm text-blue-600 hover:text-blue-800 font-medium">
-          View all activity
+        <button className="w-full rounded-full border border-white/10 bg-white/10 py-2 text-sm font-medium text-white transition hover:bg-white/20">
+          {viewAllLabel}
         </button>
       </div>
     </div>

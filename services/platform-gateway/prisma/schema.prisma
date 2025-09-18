@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id               String  @id @default(cuid())
+  name             String
+  plan             String
+  status           String  @default("active")
+  claimsProcessed  Int     @default(0)
+  lastActivity     DateTime @default(now())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  claims           Claim[]
+}
+
+model Claim {
+  id              String   @id @default(cuid())
+  tenant          Tenant   @relation(fields: [tenantId], references: [id])
+  tenantId        String
+  patientName     String
+  patientId       String
+  nationalId      String
+  amount          Float
+  status          String
+  submittedAt     DateTime
+  processedAt     DateTime?
+  diagnosis       String
+  procedures      String
+  provider        String
+  insurancePolicy String
+  nphiesStatus    String
+  preAuthRequired Boolean
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  activities      ClaimActivity[]
+}
+
+model ClaimActivity {
+  id        String   @id @default(cuid())
+  claim     Claim    @relation(fields: [claimId], references: [id])
+  claimId   String
+  tenantId  String
+  type      String
+  message   String
+  createdAt DateTime @default(now())
+}

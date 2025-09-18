@@ -23,7 +23,7 @@ fi
 
 # Install dependencies
 log_info "Installing dependencies..."
-npm install
+pnpm install
 
 # Start local services with Docker
 log_info "Starting local infrastructure (PostgreSQL, Redis)..."
@@ -36,24 +36,30 @@ sleep 10
 # Start the application services
 log_info "Starting application services..."
 
-# Start tenant manager in background
-cd services/tenant-manager
-npm install
-npm run dev &
-TENANT_MANAGER_PID=$!
+# Start platform gateway in background
+cd services/platform-gateway
+pnpm install
+if [ -z "$DATABASE_URL" ]; then
+    export DATABASE_URL="file:./prisma/dev.db"
+fi
+pnpm run prisma:generate
+pnpm run prisma:migrate
+pnpm run prisma:seed
+pnpm run dev &
+PLATFORM_GATEWAY_PID=$!
 cd ../..
 
 # Start claims AI engine in background
 cd services/claims-ai-engine
-pip install -r requirements.txt
-python src/main.py &
+poetry install --no-root >/dev/null 2>&1 || true
+poetry run python src/main.py &
 AI_ENGINE_PID=$!
 cd ../..
 
 # Start web application
 cd apps/web
-npm install
-npm run dev &
+pnpm install
+pnpm run dev &
 WEB_PID=$!
 cd ../..
 
@@ -61,11 +67,11 @@ log_info "🎉 All services started successfully!"
 echo ""
 echo "📊 Access your application:"
 echo "   Web Dashboard: http://localhost:3000"
-echo "   Tenant Manager API: http://localhost:3001"
+echo "   Platform Gateway API: http://localhost:3001"
 echo "   Claims AI Engine: http://localhost:8000"
 echo ""
 echo "🔍 Health Checks:"
-echo "   Tenant Manager: http://localhost:3001/health"
+echo "   Platform Gateway: http://localhost:3001/health"
 echo "   AI Engine: http://localhost:8000/health"
 echo ""
 echo "Press Ctrl+C to stop all services"
@@ -73,7 +79,7 @@ echo "Press Ctrl+C to stop all services"
 # Function to cleanup on exit
 cleanup() {
     log_info "Stopping services..."
-    kill $TENANT_MANAGER_PID $AI_ENGINE_PID $WEB_PID 2>/dev/null || true
+    kill $PLATFORM_GATEWAY_PID $AI_ENGINE_PID $WEB_PID 2>/dev/null || true
     docker-compose down
     log_info "All services stopped"
 }

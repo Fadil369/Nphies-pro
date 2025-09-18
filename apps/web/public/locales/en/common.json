@@ -1,0 +1,160 @@
+{
+  "dashboard": {
+    "title": "BrainSAIT Digital Insurance Platform",
+    "subtitle": "Comprehensive healthcare digitization for Saudi Arabia",
+    "kpis": {
+      "rejectionAmount": "Rejection Amount (SAR)",
+      "rejectionCount": "Rejection Count",
+      "fpar": "First-Pass Acceptance Rate"
+    },
+    "cta": {
+      "submit": {
+        "title": "Submit New Claim",
+        "description": "Process insurance claims with AI-powered validation",
+        "action": "Start Claim"
+      },
+      "integration": {
+        "title": "NPHIES Integration",
+        "description": "Real-time eligibility verification and data sync",
+        "action": "Check Status"
+      },
+      "analytics": {
+        "title": "Analytics Dashboard",
+        "description": "Advanced insights and compliance reporting",
+        "action": "View Reports"
+      },
+      "stats": {
+        "pending": "pending claims",
+        "verified": "verified",
+        "rejected": "rejections"
+      },
+      "disabled": "Requires claims.write scope"
+    }
+  },
+  "claims": {
+    "title": "Latest Claims",
+    "empty": "No claims match the selected filter",
+    "export": "Export CSV",
+    "searchPlaceholder": "Search by patient or claim ID",
+    "tenantFilter": "All tenants",
+    "dateFrom": "From",
+    "dateTo": "To",
+    "pagination": "Page {{current}} of {{total}}",
+    "filters": {
+      "all": "All",
+      "approved": "Approved",
+      "pending": "Pending",
+      "rejected": "Rejected"
+    },
+    "timelineButton": "View timeline",
+    "timelineTitle": "Claim Timeline",
+    "timelineEmpty": "No timeline events yet",
+    "timelineAdd": {
+      "placeholder": "Add timeline note",
+      "submit": "Add note"
+    },
+    "timelineTypes": {
+      "created": "Created",
+      "status": "Status update",
+      "ai": "AI decision",
+      "note": "Note"
+    },
+    "form": {
+      "title": "Submit New Claim",
+      "close": "Close",
+      "tenant": "Tenant",
+      "selectTenant": "Select tenant",
+      "patientName": "Patient name",
+      "patientId": "Patient ID",
+      "nationalId": "National ID",
+      "amount": "Amount (SAR)",
+      "diagnosis": "Diagnosis",
+      "cancel": "Cancel",
+      "submit": "Submit claim",
+      "submitting": "Submitting...",
+      "errors": {
+        "tenant": "Select a tenant",
+        "patientName": "Enter patient name",
+        "patientId": "Enter patient ID",
+        "nationalId": "Enter national ID",
+        "amount": "Enter a valid amount",
+        "diagnosis": "Enter diagnosis"
+      }
+    }
+  },
+  "charts": {
+    "claimsTrend": "Claims Processing Trends",
+    "recentActivity": "Recent Activity",
+    "empty": "No data available yet"
+  },
+  "analytics": {
+    "trendTitle": "Status Trends",
+    "leaderboardTitle": "Top Tenants",
+    "leaderboardEmpty": "No tenant analytics available",
+    "filters": {
+      "rangeLabel": "Range",
+      "planLabel": "Plan",
+      "range": {
+        "3": "Last 3 months",
+        "6": "Last 6 months",
+        "12": "Last 12 months"
+      }
+    },
+    "insightsTitle": "AI Insights",
+    "insightsEmpty": "No insights generated"
+  },
+  "stats": {
+    "totalClaims": "Total Claims",
+    "activePatients": "Active Patients",
+    "autoApproved": "Auto-Approved",
+    "processingTime": "Processing Time",
+    "change": "from last month"
+  },
+  "actions": {
+    "viewActivity": "View all activity"
+  },
+  "tenants": {
+    "title": "Tenant Performance",
+    "searchPlaceholder": "Search tenants or plans",
+    "empty": "No tenants match the current filters",
+    "noClaims": "No claims recorded for this tenant.",
+    "close": "Close",
+    "filterAll": "All plans",
+    "planOptions": {
+      "all": "All plans",
+      "starter": "Starter",
+      "professional": "Professional",
+      "enterprise": "Enterprise"
+    },
+    "metrics": {
+      "total": "Total claims",
+      "approval": "Approval rate",
+      "processing": "Avg. processing"
+    }
+  },
+  "language": {
+    "toggleToArabic": "العربية",
+    "toggleToEnglish": "English"
+  },
+  "tenantProfile": {
+    "plan": "Plan: {{plan}}",
+    "status": "Status: {{status}}",
+    "lastActivity": "Last activity {{value}}",
+    "back": "Back to dashboard",
+    "metrics": {
+      "total": "Total claims",
+      "approved": "Approved",
+      "pending": "Pending",
+      "rejected": "Rejected",
+      "approval": "Approval rate",
+      "processing": "Avg. processing"
+    },
+    "trendTitle": "Monthly Trend",
+    "recentClaims": "Recent Claims",
+    "timeline": {
+      "title": "Claim Timeline",
+      "empty": "No timeline events yet"
+    },
+    "activityTitle": "Recent Activity"
+  }
+}

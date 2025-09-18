@@ -229,8 +229,8 @@ run_health_checks() {
     
     # Check if we can build the TypeScript services
     print_info "Checking TypeScript compilation..."
-    if [ -d "services/tenant-manager" ]; then
-        cd services/tenant-manager
+    if [ -d "services/platform-gateway" ]; then
+        cd services/platform-gateway
         if pnpm run type-check >/dev/null 2>&1; then
             print_success "TypeScript compilation successful!"
         else
@@ -294,7 +294,7 @@ print_next_steps() {
     echo "   ${YELLOW}pnpm run dev${NC}"
     echo
     echo "3. Access the services:"
-    echo "   - Tenant Manager: http://localhost:3001"
+    echo "   - Platform Gateway: http://localhost:3001"
     echo "   - Claims AI Engine: http://localhost:8000"
     echo "   - API Documentation: http://localhost:8000/docs"
     echo

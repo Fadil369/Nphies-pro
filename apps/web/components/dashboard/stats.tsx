@@ -1,69 +1,57 @@
 'use client';
 
-import { TrendingUp, Users, FileText, CheckCircle } from 'lucide-react';
+import { ComponentType } from 'react';
+import { LucideProps } from 'lucide-react';
 
-const stats = [
-  {
-    name: 'Total Claims',
-    value: '12,345',
-    change: '+12%',
-    changeType: 'positive',
-    icon: FileText,
-  },
-  {
-    name: 'Active Patients',
-    value: '8,921',
-    change: '+8%',
-    changeType: 'positive',
-    icon: Users,
-  },
-  {
-    name: 'Auto-Approved',
-    value: '9,876',
-    change: '+15%',
-    changeType: 'positive',
-    icon: CheckCircle,
-  },
-  {
-    name: 'Processing Time',
-    value: '24s',
-    change: '-23%',
-    changeType: 'positive',
-    icon: TrendingUp,
-  },
-];
+type Stat = {
+  name: string;
+  value: string;
+  change?: string;
+  changeType?: 'positive' | 'negative';
+  changeLabel?: string;
+  icon: ComponentType<LucideProps>;
+};
 
-export function DashboardStats() {
+const iconStyles = 'h-6 w-6 text-cyan-300';
+
+export function DashboardStats({ stats, emptyLabel }: { stats: Stat[]; emptyLabel: string }) {
+  if (!stats.length) {
+    return (
+      <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-slate-200">
+        {emptyLabel}
+      </div>
+    );
+  }
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat) => {
         const Icon = stat.icon;
         return (
-          <div
-            key={stat.name}
-            className="bg-white rounded-lg shadow-md p-6 border border-gray-200"
-          >
+          <div key={stat.name} className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">{stat.name}</p>
-                <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+                <p className="text-sm text-slate-200">{stat.name}</p>
+                <p className="text-3xl font-semibold text-white">{stat.value}</p>
               </div>
-              <div className="p-3 bg-blue-50 rounded-full">
-                <Icon className="h-6 w-6 text-blue-600" />
+              <div className="rounded-full bg-white/10 p-3">
+                <Icon className={iconStyles} />
               </div>
             </div>
-            <div className="mt-4 flex items-center">
-              <span
-                className={`text-sm font-medium ${
-                  stat.changeType === 'positive'
-                    ? 'text-green-600'
-                    : 'text-red-600'
-                }`}
-              >
-                {stat.change}
-              </span>
-              <span className="text-sm text-gray-500 ml-2">from last month</span>
-            </div>
+            {stat.change && (
+              <div className="mt-4 flex items-center text-sm">
+                <span
+                  className={
+                    stat.changeType === 'negative'
+                      ? 'text-rose-400 font-medium'
+                      : 'text-emerald-400 font-medium'
+                  }
+                >
+                  {stat.change}
+                </span>
+                {stat.changeLabel && <span className="ml-2 text-slate-300">{stat.changeLabel}</span>}
+              </div>
+            )}
           </div>
         );
       })}
