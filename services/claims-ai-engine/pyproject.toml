@@ -22,9 +22,9 @@ celery = "^5.3.4"
 requests = "^2.31.0"
 arabic-reshaper = "^3.0.0"
 python-bidi = "^0.4.2"
-cryptography = "^43.0.1"
+cryptography = "^46.0.3"
 pydantic-ai-slim = {extras = ["ag-ui", "openai"], version = "^1.0.8"}
-python-multipart = "^0.0.20"
+python-multipart = "^0.0.22"
 prometheus-fastapi-instrumentator = "^6.0.0"
 
 [tool.poetry.group.dev.dependencies]
